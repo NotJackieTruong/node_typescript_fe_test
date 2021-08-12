@@ -26,7 +26,7 @@ export function* signInWithFBEmail() {
 			if (user.message) {
 				yield put(showAuthMessage(user.message));
 			} else {
-				localStorage.setItem(AUTH_TOKEN, user.user.uid);
+				sessionStorage.setItem(AUTH_TOKEN, user.user.uid);
 				yield put(authenticated(user.user.uid));
 			}
 		} catch (err) {
@@ -40,7 +40,7 @@ export function* signOut() {
 		try {
 			const signOutUser = yield call(FirebaseService.signOutRequest);
 			if (signOutUser === undefined) {
-				localStorage.removeItem(AUTH_TOKEN);
+				sessionStorage.removeItem(AUTH_TOKEN);
 				yield put(signOutSuccess(signOutUser));
 			} else {
 				yield put(showAuthMessage(signOutUser.message));
@@ -59,7 +59,7 @@ export function* signUpWithFBEmail() {
 			if (user.message) {
 				yield put(showAuthMessage(user.message));
 			} else {
-				localStorage.setItem(AUTH_TOKEN, user.user.uid);
+				sessionStorage.setItem(AUTH_TOKEN, user.user.uid);
 				yield put(signUpSuccess(user.user.uid));
 			}
 		} catch (error) {
@@ -76,7 +76,7 @@ export function* signInWithFBGoogle() {
 			if (user.message) {
 				yield put(showAuthMessage(user.message));
 			} else {
-				localStorage.setItem(AUTH_TOKEN, user.user.uid);
+				sessionStorage.setItem(AUTH_TOKEN, user.user.uid);
 				yield put(signInWithGoogleAuthenticated(user.user.uid));
 			}
 		} catch (error) {
@@ -92,7 +92,7 @@ export function* signInWithFacebook() {
 			if (user.message) {
 				yield put(showAuthMessage(user.message));
 			} else {
-				localStorage.setItem(AUTH_TOKEN, user.user.uid);
+				sessionStorage.setItem(AUTH_TOKEN, user.user.uid);
 				yield put(signInWithFacebookAuthenticated(user.user.uid));
 			}
 		} catch (error) {

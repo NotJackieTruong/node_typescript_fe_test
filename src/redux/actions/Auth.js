@@ -11,7 +11,9 @@ import {
   SIGNIN_WITH_GOOGLE,
   SIGNIN_WITH_GOOGLE_AUTHENTICATED,
   SIGNIN_WITH_FACEBOOK,
-  SIGNIN_WITH_FACEBOOK_AUTHENTICATED, HIDE_LOADING
+  SIGNIN_WITH_FACEBOOK_AUTHENTICATED, HIDE_LOADING,
+  SET_USER_INFO,
+  GET_USER_INFO, AUTH_TOKEN
 } from '../constants/Auth';
 
 export const signIn = (user) => {
@@ -21,15 +23,23 @@ export const signIn = (user) => {
   }
 };
 
-export const authenticated = (token) => {
-  localStorage.setItem('access_token', token)
+export const authenticated = (token, userInfo) => {
+  sessionStorage.setItem(AUTH_TOKEN, token)
   return {
     type: AUTHENTICATED,
     token
   }
 };
 
+export const setUserInfo = (data)=>{
+  return{
+    type: SET_USER_INFO,
+    payload: data
+  }
+}
+
 export const signOut = () => {
+  sessionStorage.removeItem(AUTH_TOKEN)
   return {
     type: SIGNOUT
   };

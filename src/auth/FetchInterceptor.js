@@ -6,7 +6,7 @@ import { notification } from 'antd';
 
 const service = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 60000
+  timeout: 60000,
 })
 
 // Config
@@ -16,10 +16,10 @@ const PUBLIC_REQUEST_KEY = 'public-request'
 
 // API Request interceptor
 service.interceptors.request.use(config => {
-	const jwtToken = localStorage.getItem(AUTH_TOKEN)
-	
+	const jwtToken = sessionStorage.getItem(AUTH_TOKEN)
+
   if (jwtToken) {
-    config.headers[TOKEN_PAYLOAD_KEY] = jwtToken
+    config.headers[TOKEN_PAYLOAD_KEY] = 'Bearer '+ jwtToken
   }
 
   if (!jwtToken && !config.headers[PUBLIC_REQUEST_KEY]) {
@@ -36,20 +36,21 @@ service.interceptors.request.use(config => {
   Promise.reject(error)
 })
 
-// API respone interceptor
+// API response interceptor
 service.interceptors.response.use( (response) => {
+	// console.log({headers: response.headers})
 	return response.data
 }, (error) => {
 
 	let notificationParam = {
 		message: ''
 	}
-	
-	// Remove token and redirect 
+
+	// Remove token and redirect
 	if (error.response.status === 400 || error.response.status === 403) {
 		notificationParam.message = 'Authentication Fail'
 		notificationParam.description = 'Please login again'
-		localStorage.removeItem(AUTH_TOKEN)
+		sessionStorage.removeItem(AUTH_TOKEN)
 		history.push(ENTRY_ROUTE)
 		window.location.reload();
 	}
@@ -61,7 +62,7 @@ service.interceptors.response.use( (response) => {
 	if (error.response.status === 500) {
 		notificationParam.message = 'Internal Server Error'
 	}
-	
+
 	if (error.response.status === 508) {
 		notificationParam.message = 'Time Out'
 	}

@@ -1,0 +1,4 @@
+.ant-input-disabled, .ant-input[disabled] {
+    background-color: #ffffff;
+    color: #000;
+}

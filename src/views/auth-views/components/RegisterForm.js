@@ -83,7 +83,8 @@ export const RegisterForm = (props) => {
         if (!res?.success) {
           showAuthMessage(res?.message ?? "Error")
         } else {
-          authenticated(res.data.token)
+          // authenticated(res.data.token)
+          window.location.href ='login'
         }
       })
 

@@ -8,7 +8,8 @@ import {
 	SHOW_LOADING,
 	HIDE_LOADING,
 	SIGNIN_WITH_GOOGLE_AUTHENTICATED,
-  SIGNIN_WITH_FACEBOOK_AUTHENTICATED
+	SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
+	SET_USER_INFO, SIGNOUT
 } from '../constants/Auth';
 
 const initState = {
@@ -16,7 +17,8 @@ const initState = {
   message: '',
   showMessage: false,
   redirect: '',
-  token: localStorage.getItem(AUTH_TOKEN),
+  token: sessionStorage.getItem(AUTH_TOKEN),
+	userInfo: {}
 }
 
 const auth = (state = initState, action) => {
@@ -41,6 +43,7 @@ const auth = (state = initState, action) => {
 				message: '',
 				showMessage: false,
 			}
+		case SIGNOUT:
 		case SIGNOUT_SUCCESS: {
 			return {
 				...state,
@@ -80,6 +83,12 @@ const auth = (state = initState, action) => {
 				...state,
 				loading: false,
 				token: action.token
+			}
+		}
+		case SET_USER_INFO:{
+			return{
+				...state,
+				userInfo: action.payload
 			}
 		}
 		default:

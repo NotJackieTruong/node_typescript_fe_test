@@ -1,6 +1,6 @@
-import React, {Suspense} from "react";
+import React, {Suspense, useEffect} from "react";
 import {Route, Switch, Redirect, withRouter} from "react-router-dom";
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import AppLayout from "layouts/app-layout";
 import AuthLayout from 'layouts/auth-layout';
 import AppLocale from "lang";
@@ -9,27 +9,24 @@ import {ConfigProvider} from 'antd';
 import {APP_PREFIX_PATH, AUTH_PREFIX_PATH} from 'configs/AppConfig'
 import useBodyClass from 'hooks/useBodyClass';
 import ProtectedRoute from "./components/ProtectedRoute";
-
-const Preloader = () => {
-  return (
-    <></>
-  )
-}
+import {AUTH_TOKEN} from "../redux/constants/Auth";
+import Cookies from 'js-cookie'
 
 export const Views = (props) => {
   const {locale, location, direction} = props;
   const currentAppLocale = AppLocale[locale];
   useBodyClass(`dir-${direction}`);
-  let accessToken = window.localStorage.getItem('access_token')
+
+  let accessToken = sessionStorage.getItem(AUTH_TOKEN)
   let isAuthenticated = accessToken !== "" && accessToken !== null && accessToken !== undefined
-  console.log({accessToken, isAuthenticated})
+
+
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}>
       <ConfigProvider locale={currentAppLocale.antd} direction={direction}>
         <Suspense fallback={<h1>Loading...</h1>}>
-          <Preloader/>
           <Switch>
             <Route exact path="/">
               <Redirect to={APP_PREFIX_PATH}/>
@@ -42,6 +39,7 @@ export const Views = (props) => {
             </ProtectedRoute>
           </Switch>
         </Suspense>
+
       </ConfigProvider>
     </IntlProvider>
   )

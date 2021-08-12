@@ -1,4 +1,5 @@
 import fetch from 'auth/FetchInterceptor'
+import {AUTH_TOKEN} from "../redux/constants/Auth";
 
 const JwtAuthService = {}
 
@@ -18,9 +19,19 @@ JwtAuthService.signUp = function (data) {
 		url: '/signup',
 		method: 'post',
 		headers: {
-      'public-request': 'true'
+      'public-request': 'true',
     },
 		data: data
+	})
+}
+
+JwtAuthService.getMe = function (data){
+	return fetch({
+		url: '/users/me',
+		method: 'get',
+		headers: {
+		},
+		data: {}
 	})
 }
 
