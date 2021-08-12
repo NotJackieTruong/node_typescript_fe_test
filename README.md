@@ -4,4 +4,4 @@ A small project to test node typescript be
 
 First, install packages: npm install
 
-Then run local: npm run start 
+Then to run locally: npm run start 
