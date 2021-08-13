@@ -1,32 +1,25 @@
 import React from "react";
-import {Avatar, Layout} from 'antd';
+import {Avatar, Grid, Layout} from 'antd';
 import {connect, useSelector} from 'react-redux';
 import {SIDE_NAV_WIDTH, SIDE_NAV_DARK, NAV_TYPE_SIDE} from 'constants/ThemeConstant';
 import {Scrollbars} from 'react-custom-scrollbars';
 import MenuContent from './MenuContent'
-import CustomCarousel from "./CustomComponents/CustomCarousel";
+import utils from "../../utils";
 
 const {Sider} = Layout;
+const { useBreakpoint } = Grid;
 
 export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, localization = true}) => {
   const props = {sideNavTheme, routeInfo, hideGroupTitle, localization}
-  const activeUsers = useSelector(state => {
-    return state.userReducer.activeUsers
-  })
+  const screens = utils.getBreakPoint(useBreakpoint());
+  const isMobile = !screens.includes('lg')
   return (
     <Sider
       className={`side-nav ${sideNavTheme === SIDE_NAV_DARK ? 'side-nav-dark' : ''}`}
       width={SIDE_NAV_WIDTH}
-      collapsed={navCollapsed}
+      collapsed={isMobile}
+      style={{top: 0, height: '100%'}}
     >
-      <CustomCarousel>
-        {activeUsers.map(user => (
-          <>
-            <Avatar src={user.avatar}/>
-            <span>{user.fullName}</span>
-          </>
-        ))}
-      </CustomCarousel>
       <Scrollbars autoHide>
         <MenuContent
           type={NAV_TYPE_SIDE}
