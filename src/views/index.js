@@ -10,7 +10,7 @@ import {APP_PREFIX_PATH, AUTH_PREFIX_PATH} from 'configs/AppConfig'
 import useBodyClass from 'hooks/useBodyClass';
 import ProtectedRoute from "./components/ProtectedRoute";
 import {AUTH_TOKEN} from "../redux/constants/Auth";
-import Cookies from 'js-cookie'
+import Socket from "../socket/Socket";
 
 export const Views = (props) => {
   const {locale, location, direction} = props;
@@ -20,13 +20,13 @@ export const Views = (props) => {
   let accessToken = sessionStorage.getItem(AUTH_TOKEN)
   let isAuthenticated = accessToken !== "" && accessToken !== null && accessToken !== undefined
 
-
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}>
       <ConfigProvider locale={currentAppLocale.antd} direction={direction}>
         <Suspense fallback={<h1>Loading...</h1>}>
+          {/*<SocketListener/>*/}
           <Switch>
             <Route exact path="/">
               <Redirect to={APP_PREFIX_PATH}/>

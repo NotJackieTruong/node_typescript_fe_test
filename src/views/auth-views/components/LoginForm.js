@@ -15,10 +15,7 @@ import {
 import JwtAuthService from 'services/JwtAuthService'
 import {useHistory} from "react-router-dom";
 import {motion} from "framer-motion"
-import {io} from 'socket.io-client'
-import {env} from '../../../configs/EnvironmentConfig'
-
-const socket = io('http://192.168.1.243:3000', { transports: ['websocket', 'polling', 'flashsocket'] })
+import Socket from "../../../socket/Socket";
 
 export const LoginForm = (props) => {
   let history = useHistory();
@@ -44,13 +41,12 @@ export const LoginForm = (props) => {
   const onLogin = values => {
     showLoading()
     JwtAuthService.login(values).then(res => {
-      console.log(res)
-      if (!res?.success) {
+      if (!res?.success && !res.data.accessToken && res.data.user) {
         showAuthMessage(res?.message ?? "Error")
       } else {
         authenticated(res.data.accessToken)
         setUserInfo(res.data.user)
-        socket.emit("USER_ONLINE", res.data.user)
+        Socket.emitUserOnline(res.data.user)
       }
     }).catch(e => {
       showAuthMessage(e)
@@ -74,9 +70,6 @@ export const LoginForm = (props) => {
         hideAuthMessage();
       }, 3000);
     }
-    socket.on("USER_ONLINE_LIST", (users)=>{
-    	console.log({userList: users})
-		})
   });
 
   const renderOtherSignIn = (

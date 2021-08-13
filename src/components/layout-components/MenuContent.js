@@ -1,19 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Menu, Grid } from "antd";
+import {Link} from "react-router-dom";
+import {Menu, Grid, Avatar} from "antd";
 import IntlMessage from "../util-components/IntlMessage";
 import Icon from "../util-components/Icon";
 import navigationConfig from "configs/NavigationConfig";
-import { connect } from "react-redux";
-import { SIDE_NAV_LIGHT, NAV_TYPE_SIDE } from "constants/ThemeConstant";
+import {connect, useSelector} from "react-redux";
+import {SIDE_NAV_LIGHT, NAV_TYPE_SIDE} from "constants/ThemeConstant";
 import utils from 'utils'
-import { onMobileNavToggle } from "redux/actions/Theme";
+import {onMobileNavToggle} from "redux/actions/Theme";
+import {APP_PREFIX_PATH} from "../../configs/AppConfig";
 
-const { SubMenu } = Menu;
-const { useBreakpoint } = Grid;
+const {SubMenu} = Menu;
+const {useBreakpoint} = Grid;
 
 const setLocale = (isLocaleOn, localeKey) =>
-  isLocaleOn ? <IntlMessage id={localeKey} /> : localeKey.toString();
+  isLocaleOn ? <IntlMessage id={localeKey}/> : localeKey.toString();
 
 const setDefaultOpen = (key) => {
   let keyList = [];
@@ -30,76 +31,52 @@ const setDefaultOpen = (key) => {
 };
 
 const SideNavContent = (props) => {
-	const { sideNavTheme, routeInfo, hideGroupTitle, localization, onMobileNavToggle } = props;
-	const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
-	const closeMobileNav = () => {
-		if (isMobile) {
-			onMobileNavToggle(false)
-		}
-	}
+  const {sideNavTheme, routeInfo, hideGroupTitle, localization, onMobileNavToggle} = props;
+  const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
+  const closeMobileNav = () => {
+    if (isMobile) {
+      onMobileNavToggle(false)
+    }
+  }
+  const activeUsers = useSelector(state => {
+    return state.userReducer.activeUsers
+  })
   return (
     <Menu
       theme={sideNavTheme === SIDE_NAV_LIGHT ? "light" : "dark"}
       mode="inline"
-      style={{ height: "100%", borderRight: 0 }}
+      style={{height: "100%", borderRight: 0}}
       defaultSelectedKeys={[routeInfo?.key]}
       defaultOpenKeys={setDefaultOpen(routeInfo?.key)}
       className={hideGroupTitle ? "hide-group-title" : ""}
     >
-      {navigationConfig.map((menu) =>
-        menu.submenu.length > 0 ? (
-          <Menu.ItemGroup
-            key={menu.key}
-            title={setLocale(localization, menu.title)}
-          >
-            {menu.submenu.map((subMenuFirst) =>
-              subMenuFirst.submenu.length > 0 ? (
-                <SubMenu
-                  icon={
-                    subMenuFirst.icon ? (
-                      <Icon type={subMenuFirst?.icon} />
-                    ) : null
-                  }
-                  key={subMenuFirst.key}
-                  title={setLocale(localization, subMenuFirst.title)}
-                >
-                  {subMenuFirst.submenu.map((subMenuSecond) => (
-                    <Menu.Item key={subMenuSecond.key}>
-                      {subMenuSecond.icon ? (
-                        <Icon type={subMenuSecond?.icon} />
-                      ) : null}
-                      <span>
-                        {setLocale(localization, subMenuSecond.title)}
-                      </span>
-                      <Link onClick={() => closeMobileNav()} to={subMenuSecond.path} />
-                    </Menu.Item>
-                  ))}
-                </SubMenu>
-              ) : (
-                <Menu.Item key={subMenuFirst.key}>
-                  {subMenuFirst.icon ? <Icon type={subMenuFirst.icon} /> : null}
-                  <span>{setLocale(localization, subMenuFirst.title)}</span>
-                  <Link onClick={() => closeMobileNav()} to={subMenuFirst.path} />
-                </Menu.Item>
-              )
-            )}
-          </Menu.ItemGroup>
-        ) : (
-          <Menu.Item key={menu.key}>
-            {menu.icon ? <Icon type={menu?.icon} /> : null}
-            <span>{setLocale(localization, menu?.title)}</span>
-            {menu.path ? <Link onClick={() => closeMobileNav()} to={menu.path} /> : null}
-          </Menu.Item>
-        )
+      {activeUsers.map(user => {
+        return {
+          key: user._id,
+          path: `${APP_PREFIX_PATH}/messages/${user._id}`,
+          title: user.fullName,
+          avatar: user.avatar,
+          breadcrumb: false,
+        }
+      }).map((menu) =>
+        <Menu.Item key={menu.key} style={{
+          height: 'fit-content',
+          paddingLeft: '20%',
+        }}>
+          {menu.icon ? <Icon type={menu?.icon}/> :
+            <Avatar src={menu?.avatar} size={56} style={{marginRight:8}}/>}
+          <span>{menu?.title}</span>
+          {menu.path ? <Link onClick={() => closeMobileNav()} to={menu.path}/> : null}
+        </Menu.Item>
       )}
     </Menu>
   );
 };
 
 const TopNavContent = (props) => {
-  const { topNavColor, localization } = props;
+  const {topNavColor, localization} = props;
   return (
-    <Menu mode="horizontal" style={{ backgroundColor: topNavColor }}>
+    <Menu mode="horizontal" style={{backgroundColor: topNavColor}}>
       {navigationConfig.map((menu) =>
         menu.submenu.length > 0 ? (
           <SubMenu
@@ -107,47 +84,47 @@ const TopNavContent = (props) => {
             popupClassName="top-nav-menu"
             title={
               <span>
-                {menu.icon ? <Icon type={menu?.icon} /> : null}
+        {menu.icon ? <Icon type={menu?.icon}/> : null}
                 <span>{setLocale(localization, menu.title)}</span>
-              </span>
+          </span>
             }
           >
             {menu.submenu.map((subMenuFirst) =>
-              subMenuFirst.submenu.length > 0 ? (
-                <SubMenu
-                  key={subMenuFirst.key}
-                  icon={
-                    subMenuFirst.icon ? (
-                      <Icon type={subMenuFirst?.icon} />
-                    ) : null
-                  }
-                  title={setLocale(localization, subMenuFirst.title)}
-                >
-                  {subMenuFirst.submenu.map((subMenuSecond) => (
-                    <Menu.Item key={subMenuSecond.key}>
-                      <span>
-                        {setLocale(localization, subMenuSecond.title)}
-                      </span>
-                      <Link to={subMenuSecond.path} />
-                    </Menu.Item>
-                  ))}
-                </SubMenu>
-              ) : (
-                <Menu.Item key={subMenuFirst.key}>
-                  {subMenuFirst.icon ? (
-                    <Icon type={subMenuFirst?.icon} />
-                  ) : null}
-                  <span>{setLocale(localization, subMenuFirst.title)}</span>
-                  <Link to={subMenuFirst.path} />
-                </Menu.Item>
-              )
+                subMenuFirst.submenu.length > 0 ? (
+                  <SubMenu
+                    key={subMenuFirst.key}
+                    icon={
+                      subMenuFirst.icon ? (
+                        <Icon type={subMenuFirst?.icon}/>
+                      ) : null
+                    }
+                    title={setLocale(localization, subMenuFirst.title)}
+                  >
+                    {subMenuFirst.submenu.map((subMenuSecond) => (
+                      <Menu.Item key={subMenuSecond.key}>
+          <span>
+        {setLocale(localization, subMenuSecond.title)}
+          </span>
+                        <Link to={subMenuSecond.path}/>
+                      </Menu.Item>
+                    ))}
+                  </SubMenu>
+                ) : (
+                  <Menu.Item key={subMenuFirst.key}>
+                    {subMenuFirst.icon ? (
+                      <Icon type={subMenuFirst?.icon}/>
+                    ) : null}
+                    <span>{setLocale(localization, subMenuFirst.title)}</span>
+                    <Link to={subMenuFirst.path}/>
+                  </Menu.Item>
+                )
             )}
           </SubMenu>
         ) : (
           <Menu.Item key={menu.key}>
-            {menu.icon ? <Icon type={menu?.icon} /> : null}
+            {menu.icon ? <Icon type={menu?.icon}/> : null}
             <span>{setLocale(localization, menu?.title)}</span>
-            {menu.path ? <Link to={menu.path} /> : null}
+            {menu.path ? <Link to={menu.path}/> : null}
           </Menu.Item>
         )
       )}
@@ -163,9 +140,9 @@ const MenuContent = (props) => {
   );
 };
 
-const mapStateToProps = ({ theme }) => {
-  const { sideNavTheme, topNavColor } = theme;
-  return { sideNavTheme, topNavColor };
+const mapStateToProps = ({theme}) => {
+  const {sideNavTheme, topNavColor} = theme;
+  return {sideNavTheme, topNavColor};
 };
 
-export default connect(mapStateToProps, { onMobileNavToggle })(MenuContent);
+export default connect(mapStateToProps, {onMobileNavToggle})(MenuContent);

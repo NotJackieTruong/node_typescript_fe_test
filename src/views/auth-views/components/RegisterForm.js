@@ -72,7 +72,6 @@ export const RegisterForm = (props) => {
 
   const onSignUp = () => {
     form.validateFields().then(values => {
-      console.log({values})
       let userInfo = {
         ...values,
         avatar: "https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png"

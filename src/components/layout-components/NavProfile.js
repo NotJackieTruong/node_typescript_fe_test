@@ -11,6 +11,7 @@ import {
 import Icon from 'components/util-components/Icon';
 import {signOut} from 'redux/actions/Auth';
 import {APP_PREFIX_PATH} from "../../configs/AppConfig";
+import Socket from "../../socket/Socket";
 
 const menuItem = [
   {
@@ -32,6 +33,11 @@ export const NavProfile = () => {
     return state.auth.userInfo
   })
   const dispatch = useDispatch()
+
+  const onSignOut = ()=>{
+    Socket.emitUserOffline(userInfo)
+    dispatch(signOut())
+  }
 
   const profileImg = userInfo.avatar;
   const profileMenu = (
@@ -57,7 +63,7 @@ export const NavProfile = () => {
               </Menu.Item>
             );
           })}
-          <Menu.Item key={menuItem.length + 1} onClick={e => dispatch(signOut())}>
+          <Menu.Item key={menuItem.length + 1} onClick={e => onSignOut()}>
             <span>
               <LogoutOutlined className="mr-3"/>
               <span className="font-weight-normal">Sign Out</span>
