@@ -43,6 +43,22 @@ class Socket {
     })
   }
 
+  static emitCreateNewChat(users){
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.CREATE_NEW_CHAT, users)
+  }
+
+  static onCreateNewChat(callback){
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.CREATE_NEW_CHAT, chat=>{
+      callback(chat)
+    })
+  }
+
+  static onError(callback){
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.ERRORS, error=>{
+      callback(error)
+    })
+  }
+
 }
 
 export default Socket

@@ -32,14 +32,17 @@ const Preloader = () => {
 export const AppViews = () => {
   const dispatch = useDispatch()
 
-  const dispatchAction = (userList) => {
+  const dispatchUserAction = (userList) => {
     console.log("User list on listening: ", userList)
     dispatch(setActiveUsers(userList))
   }
+  const dispatchChatAction = (chat)=>{
+
+  }
   useEffect(() => {
-    Socket.onUserOnline(dispatchAction)
-    Socket.onUserOffline(dispatchAction)
-    Socket.onGetActiveUsers(dispatchAction)
+    Socket.onUserOnline(dispatchUserAction)
+    Socket.onUserOffline(dispatchUserAction)
+    Socket.onGetActiveUsers(dispatchUserAction)
   })
 
   return (

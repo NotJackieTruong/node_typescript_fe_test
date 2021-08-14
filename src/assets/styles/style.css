@@ -6,6 +6,11 @@
     height: fit-content;
 }
 
-.ant-menu-inline-collapsed{
-    padding: 0px calc(20% - 8px);
+.side-nav-header .ant-menu-horizontal{
+    border-bottom: 0px ;
+}
+
+.clickable-list-item:hover{
+    cursor: pointer;
+    background: #eceff1;
 }
