@@ -8,6 +8,7 @@ import utils from "../../utils";
 import {NavProfile} from "./NavProfile";
 import {EditOutlined, SearchOutlined, CheckCircleTwoTone} from "@ant-design/icons";
 import '../../assets/styles/style.css'
+import Socket from "../../socket/Socket";
 
 const {Sider} = Layout;
 const {useBreakpoint} = Grid;
@@ -30,6 +31,13 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
     setUserModalList(array)
   }, [activeUsers])
 
+  const resetState = ()=>{
+    let array = activeUsers.map(item => {
+      return {...item, isSelected: false}
+    })
+    setUserModalList(array)
+  }
+
   const onSearch = () => {
 
   }
@@ -38,7 +46,9 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
   }
   const handleOk = () => {
     setIsModalVisible(false);
-
+    let array = userModalList.filter(item=>item.isSelected === true)
+    Socket.emitCreateNewChat(array)
+    resetState()
   };
 
   const handleCancel = () => {
@@ -46,17 +56,13 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
   };
 
   const handleClose = () => {
-    let array = activeUsers.map(item => {
-      return {...item, isSelected: false}
-    })
-    setUserModalList(array)
+    resetState()
   }
 
   const onSelect = (item) => {
     let array = [...userModalList]
     let obj = array.find(i => i._id === item._id)
     obj.isSelected = !obj.isSelected
-    console.log({array})
     setUserModalList(array)
   }
 
@@ -102,7 +108,6 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
         <div className={"d-flex flex-row align-items-center"}>
           <span className={'font-weight-bold'}>To: </span>
           {userModalList.filter(item => item.isSelected === true).map((item, index) => {
-            console.log({item: item.isSelected})
             return (
               <Tag key={index}>{item.fullName}</Tag>
             )

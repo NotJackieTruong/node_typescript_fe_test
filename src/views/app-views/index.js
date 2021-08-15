@@ -32,18 +32,12 @@ const Preloader = () => {
 export const AppViews = () => {
   const dispatch = useDispatch()
 
-  const dispatchUserAction = (userList) => {
-    console.log("User list on listening: ", userList)
-    dispatch(setActiveUsers(userList))
+  const dispatchAction = (action) => {
+    console.log("User action: ", action)
+    if (Object.keys(action).length > 0 && action !== undefined) {
+      dispatch(action)
+    }
   }
-  const dispatchChatAction = (chat)=>{
-
-  }
-  useEffect(() => {
-    Socket.onUserOnline(dispatchUserAction)
-    Socket.onUserOffline(dispatchUserAction)
-    Socket.onGetActiveUsers(dispatchUserAction)
-  })
 
   return (
     <Suspense fallback={<Loading cover="content"/>}>

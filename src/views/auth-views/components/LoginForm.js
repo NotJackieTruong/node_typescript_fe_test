@@ -46,7 +46,7 @@ export const LoginForm = (props) => {
       } else {
         authenticated(res.data.accessToken)
         setUserInfo(res.data.user)
-        Socket.emitUserOnline(res.data.user)
+        Socket.emitLogin(res.data.user)
       }
     }).catch(e => {
       showAuthMessage(e)

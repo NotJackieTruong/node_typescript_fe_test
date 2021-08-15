@@ -35,7 +35,7 @@ export const NavProfile = () => {
   const dispatch = useDispatch()
 
   const onSignOut = ()=>{
-    Socket.emitUserOffline(userInfo)
+    Socket.emitLogout(userInfo)
     dispatch(signOut())
   }
 

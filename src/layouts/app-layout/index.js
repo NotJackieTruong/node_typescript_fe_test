@@ -47,8 +47,6 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
     return <Loading cover="page"/>;
   }
 
-  console.log({screens, direction})
-
   const getLayoutDirectionGutter = () => {
     if (direction === DIR_LTR) {
       return {paddingLeft: getLayoutGutter()}

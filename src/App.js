@@ -1,29 +1,29 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector, useStore} from 'react-redux';
+import {BrowserRouter as Router} from 'react-router-dom';
 import Views from './views';
-import { Route, Switch } from 'react-router-dom';
-import { ThemeSwitcherProvider } from "react-css-theme-switcher";
-import { THEME_CONFIG } from './configs/AppConfig';
+import {Route, Switch} from 'react-router-dom';
+import Socket from "./socket/Socket";
 
-const themes = {
-  dark: `${process.env.PUBLIC_URL}/css/dark-theme.css`,
-  light: `${process.env.PUBLIC_URL}/css/light-theme.css`,
-};
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch()
+  const dispatchAction = (action) => {
+    console.log("action: ", action)
+    dispatch(action)
+  }
+  useEffect(() => {
+    Socket.onConnect()
+    Socket.onGetActiveUsers(dispatchAction)
+    Socket.onCreateNewChat(dispatchAction)
+  })
   return (
     <div className="App">
-      <Provider store={store}>
-        <ThemeSwitcherProvider themeMap={themes} defaultTheme={THEME_CONFIG.currentTheme} insertionPoint="styles-insertion-point">
-          <Router>
-            <Switch>
-              <Route path="/" component={Views}/>
-            </Switch>
-          </Router>
-        </ThemeSwitcherProvider>
-      </Provider>
+      <Router>
+        <Switch>
+          <Route path="/" component={Views}/>
+        </Switch>
+      </Router>
     </div>
   );
 }

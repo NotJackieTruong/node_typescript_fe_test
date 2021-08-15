@@ -13,7 +13,7 @@ import {
   SIGNIN_WITH_FACEBOOK,
   SIGNIN_WITH_FACEBOOK_AUTHENTICATED, HIDE_LOADING,
   SET_USER_INFO,
-  GET_USER_INFO, AUTH_TOKEN
+  GET_USER_INFO, AUTH_TOKEN, USER_INFO
 } from '../constants/Auth';
 
 export const signIn = (user) => {
@@ -32,6 +32,7 @@ export const authenticated = (token, userInfo) => {
 };
 
 export const setUserInfo = (data)=>{
+  sessionStorage.setItem(USER_INFO, JSON.stringify(data))
   return{
     type: SET_USER_INFO,
     payload: data
