@@ -18,20 +18,23 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
   const props = {sideNavTheme, routeInfo, hideGroupTitle, localization}
   const screens = utils.getBreakPoint(useBreakpoint());
   const isMobile = !screens.includes('lg')
-  const activeUsers = useSelector(state => {
-    return state.userReducer.activeUsers
+  const {activeUsers, userInfo} = useSelector(state => {
+    return {
+      activeUsers: state.userReducer.activeUsers,
+      userInfo: state.auth.userInfo
+    }
   })
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userModalList, setUserModalList] = useState([])
 
   useEffect(() => {
-    let array = activeUsers.map(item => {
+    let array = activeUsers.filter(item => item._id !== userInfo._id).map(item => {
       return {...item, isSelected: false}
     })
     setUserModalList(array)
-  }, [activeUsers])
+  }, [activeUsers, userInfo])
 
-  const resetState = ()=>{
+  const resetState = () => {
     let array = activeUsers.map(item => {
       return {...item, isSelected: false}
     })
@@ -46,7 +49,8 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
   }
   const handleOk = () => {
     setIsModalVisible(false);
-    let array = userModalList.filter(item=>item.isSelected === true)
+    let array = [...userModalList.filter(item => item.isSelected === true), userInfo]
+    console.log({array})
     Socket.emitCreateNewChat(array)
     resetState()
   };

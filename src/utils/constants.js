@@ -9,6 +9,7 @@ const CONSTANTS = {
     LOG_IN: "LOG_IN",
     LOG_OUT: "LOG_OUT",
     CREATE_NEW_CHAT: "CREATE_NEW_CHAT",
+    GET_CHATS: "GET_CHATS"
   }
 }
 

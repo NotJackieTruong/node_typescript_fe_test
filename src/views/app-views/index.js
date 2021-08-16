@@ -6,13 +6,13 @@ import {useDispatch, useStore} from "react-redux";
 import JwtAuthService from "../../services/JwtAuthService";
 import {authenticated, setUserInfo} from "../../redux/actions/Auth";
 import Socket from "../../socket/Socket";
-import {setActiveUsers} from "../../redux/actions/UserActions";
 
 const Preloader = () => {
   console.log("Preloader called")
   const dispatch = useDispatch()
   useEffect(() => {
     Socket.emitGetActiveUsers()
+    Socket.emitGetChats()
     JwtAuthService.getMe().then(res => {
       if (res.data.accessToken) {
         dispatch(authenticated(res.data.accessToken))
@@ -34,9 +34,7 @@ export const AppViews = () => {
 
   const dispatchAction = (action) => {
     console.log("User action: ", action)
-    if (Object.keys(action).length > 0 && action !== undefined) {
-      dispatch(action)
-    }
+    dispatch(action)
   }
 
   return (

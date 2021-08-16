@@ -16,6 +16,7 @@ const App = () => {
     Socket.onConnect()
     Socket.onGetActiveUsers(dispatchAction)
     Socket.onCreateNewChat(dispatchAction)
+    Socket.onGetChats(dispatchAction)
   })
   return (
     <div className="App">

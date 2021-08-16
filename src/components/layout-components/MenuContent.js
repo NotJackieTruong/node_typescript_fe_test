@@ -9,6 +9,7 @@ import {SIDE_NAV_LIGHT, NAV_TYPE_SIDE} from "constants/ThemeConstant";
 import utils from 'utils'
 import {onMobileNavToggle} from "redux/actions/Theme";
 import {APP_PREFIX_PATH} from "../../configs/AppConfig";
+import {UserOutlined} from "@ant-design/icons";
 
 const {SubMenu} = Menu;
 const {useBreakpoint} = Grid;
@@ -38,8 +39,11 @@ const SideNavContent = (props) => {
       onMobileNavToggle(false)
     }
   }
-  const activeUsers = useSelector(state => {
-    return state.userReducer.activeUsers
+  const {activeUsers, chats} = useSelector(state => {
+    return {
+      activeUsers: state.userReducer.activeUsers,
+      chats: state.chatReducer.chats
+    }
   })
   return (
     <Menu
@@ -50,12 +54,12 @@ const SideNavContent = (props) => {
       defaultOpenKeys={setDefaultOpen(routeInfo?.key)}
       className={hideGroupTitle ? "hide-group-title" : ""}
     >
-      {activeUsers.map(user => {
+      {chats.map(chat => {
         return {
-          key: user._id,
-          path: `${APP_PREFIX_PATH}/messages/${user._id}`,
-          title: user.fullName,
-          avatar: user.avatar,
+          key: chat._id,
+          path: `${APP_PREFIX_PATH}/messages/${chat._id}`,
+          title: chat.name,
+          avatar: chat.avatar,
           breadcrumb: false,
         }
       }).map((menu) =>
@@ -63,8 +67,9 @@ const SideNavContent = (props) => {
           height: 'fit-content',
           paddingLeft: '20%',
         }}>
-          {menu.icon ? <Icon type={menu?.icon}/> :
-            <Avatar src={menu?.avatar} size={56} style={{marginRight:8}}/>}
+          {menu.avatar ? <Avatar src={menu?.avatar} size={56} style={{marginRight: 8}}/> :
+            <Avatar icon={<UserOutlined/>} size={56} style={{marginRight: 8}}/>
+          }
           <span>{menu?.title}</span>
           {menu.path ? <Link onClick={() => closeMobileNav()} to={menu.path}/> : null}
         </Menu.Item>
