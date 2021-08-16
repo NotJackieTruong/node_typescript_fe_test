@@ -1,17 +1,32 @@
-import {SET_CHATS, ADD_CHAT} from "../constants/Chat";
+import {SET_CHATS, ADD_CHAT, SET_CURRENT_CHAT_MESSAGES, SET_CURRENT_CHAT, ADD_MESSAGE} from "../constants/Chat";
 
 const initState = {
-  chats: []
+  chats: [],
+  currentChat: {},
+  currentChatMessages: []
 }
 
 const ChatReducer = (state = initState, action) => {
   switch (action.type) {
     case SET_CHATS:
       return {...state, chats: action.payload}
+
     case ADD_CHAT:
-      let array = [...state.chats]
-      array.unshift(action.payload)
-      return {...state, chats: array}
+      let chatsClone = [...state.chats]
+      chatsClone.unshift(action.payload)
+      return {...state, chats: chatsClone}
+
+    case SET_CURRENT_CHAT:
+      return {...state, currentChat: action.payload}
+
+    case SET_CURRENT_CHAT_MESSAGES:
+      return {...state, currentChatMessages: action.payload}
+
+    case ADD_MESSAGE:
+      let currentChatMessagesClone = [...state.currentChatMessages]
+      currentChatMessagesClone.push(action.payload)
+      return {...state, currentChatMessages: currentChatMessagesClone}
+
     default:
       return {...state}
   }

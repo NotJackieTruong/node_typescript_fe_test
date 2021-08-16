@@ -1,6 +1,6 @@
-import React, {Suspense, useEffect} from "react";
+import React, {Suspense} from "react";
 import {Route, Switch, Redirect, withRouter} from "react-router-dom";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import AppLayout from "layouts/app-layout";
 import AuthLayout from 'layouts/auth-layout';
 import AppLocale from "lang";
@@ -10,7 +10,6 @@ import {APP_PREFIX_PATH, AUTH_PREFIX_PATH} from 'configs/AppConfig'
 import useBodyClass from 'hooks/useBodyClass';
 import ProtectedRoute from "./components/ProtectedRoute";
 import {AUTH_TOKEN} from "../redux/constants/Auth";
-import Socket from "../socket/Socket";
 
 export const Views = (props) => {
   const {locale, location, direction} = props;

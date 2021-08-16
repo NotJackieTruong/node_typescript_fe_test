@@ -1,12 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import SideNav from 'components/layout-components/SideNav';
-import TopNav from 'components/layout-components/TopNav';
 import Loading from 'components/shared-components/Loading';
 import MobileNav from 'components/layout-components/MobileNav'
-import HeaderNav from 'components/layout-components/HeaderNav';
 import PageHeader from 'components/layout-components/PageHeader';
-import Footer from 'components/layout-components/Footer';
 import AppViews from 'views/app-views';
 import {
   Layout,
@@ -24,6 +21,7 @@ import {
 } from 'constants/ThemeConstant';
 import utils from 'utils';
 import {useThemeSwitcher} from "react-css-theme-switcher";
+import FooterInput from "../../components/layout-components/FooterInput";
 
 const {Content} = Layout;
 const {useBreakpoint} = Grid;
@@ -59,11 +57,8 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
 
   return (
     <Layout>
-      {/*<HeaderNav isMobile={isMobile}/>*/}
-      {/*{(isNavTop && !isMobile) ? <TopNav routeInfo={currentRouteInfo}/> : null}*/}
-      <Layout className="app-container">
+      <Layout className="app-container" style={{height: '100%'}}>
         <SideNav routeInfo={currentRouteInfo}/>
-        {/*{(isNavSide && !isMobile) ? <SideNav routeInfo={currentRouteInfo}/> : null }*/}
         <Layout className="app-layout" style={getLayoutDirectionGutter()}>
           <div className={`app-content ${isNavTop ? 'layout-top-nav' : ''}`} style={{marginTop: 0}}>
             <PageHeader display={currentRouteInfo?.breadcrumb} title={currentRouteInfo?.title}/>
@@ -71,7 +66,7 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
               <AppViews/>
             </Content>
           </div>
-          {/*<Footer/>*/}
+          <FooterInput/>
         </Layout>
       </Layout>
       {isMobile && <MobileNav/>}

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { SettingOutlined } from '@ant-design/icons';
 import { Drawer, Menu } from 'antd';
-import ThemeConfigurator from './ThemeConfigurator';
 import { connect } from "react-redux";
-import { DIR_RTL } from 'constants/ThemeConstant';
 
 export class NavPanel extends Component {
 	state = { visible: false };

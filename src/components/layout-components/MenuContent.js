@@ -4,12 +4,13 @@ import {Menu, Grid, Avatar} from "antd";
 import IntlMessage from "../util-components/IntlMessage";
 import Icon from "../util-components/Icon";
 import navigationConfig from "configs/NavigationConfig";
-import {connect, useSelector} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {SIDE_NAV_LIGHT, NAV_TYPE_SIDE} from "constants/ThemeConstant";
 import utils from 'utils'
 import {onMobileNavToggle} from "redux/actions/Theme";
 import {APP_PREFIX_PATH} from "../../configs/AppConfig";
 import {UserOutlined} from "@ant-design/icons";
+import {setCurrentChat} from "../../redux/actions/ChatActions";
 
 const {SubMenu} = Menu;
 const {useBreakpoint} = Grid;
@@ -34,6 +35,7 @@ const setDefaultOpen = (key) => {
 const SideNavContent = (props) => {
   const {sideNavTheme, routeInfo, hideGroupTitle, localization, onMobileNavToggle} = props;
   const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
+  const dispatch = useDispatch()
   const closeMobileNav = () => {
     if (isMobile) {
       onMobileNavToggle(false)
@@ -45,6 +47,12 @@ const SideNavContent = (props) => {
       chats: state.chatReducer.chats
     }
   })
+
+  const onSelect = ({item, key, keyPath, selectedKeys, domEvent}) => {
+    console.log({item, key, keyPath, selectedKeys, domEvent})
+    let currentChat = chats.find(item=>item._id === key)
+    dispatch(setCurrentChat(currentChat))
+  }
   return (
     <Menu
       theme={sideNavTheme === SIDE_NAV_LIGHT ? "light" : "dark"}
@@ -53,6 +61,7 @@ const SideNavContent = (props) => {
       defaultSelectedKeys={[routeInfo?.key]}
       defaultOpenKeys={setDefaultOpen(routeInfo?.key)}
       className={hideGroupTitle ? "hide-group-title" : ""}
+      onSelect={onSelect}
     >
       {chats.map(chat => {
         return {

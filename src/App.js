@@ -9,7 +9,7 @@ import Socket from "./socket/Socket";
 const App = () => {
   const dispatch = useDispatch()
   const dispatchAction = (action) => {
-    console.log("action: ", action)
+    // console.log("action: ", action)
     dispatch(action)
   }
   useEffect(() => {
@@ -17,6 +17,8 @@ const App = () => {
     Socket.onGetActiveUsers(dispatchAction)
     Socket.onCreateNewChat(dispatchAction)
     Socket.onGetChats(dispatchAction)
+    Socket.onGetCurrentChatMessages(dispatchAction)
+    Socket.onSendMessage(dispatchAction)
   })
   return (
     <div className="App">

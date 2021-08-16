@@ -2,7 +2,7 @@ import {io} from "socket.io-client";
 import {env} from '../configs/EnvironmentConfig'
 import CONSTANTS from "../utils/constants";
 import {setActiveUsers} from "../redux/actions/UserActions";
-import {addChat, setChats} from "../redux/actions/ChatActions";
+import {addChat, addMessage, setChats, setCurrentChatMessages} from "../redux/actions/ChatActions";
 import {setUserInfo} from "../redux/actions/Auth";
 import {USER_INFO} from "../redux/constants/Auth";
 import Utils from "../utils";
@@ -81,11 +81,27 @@ class Socket {
     })
   }
 
-  // static onError(callback) {
-  //   this.socket.on(CONSTANTS.SOCKET_EVENTS.ERRORS, error => {
-  //     callback(error)
-  //   })
-  // }
+  // get messages
+  static emitGetCurrentChatMessages(chatId) {
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.GET_CURRENT_CHAT_MESSAGES, chatId)
+  }
+
+  static onGetCurrentChatMessages(callback) {
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.GET_CURRENT_CHAT_MESSAGES, (messages) => {
+      callback(setCurrentChatMessages(messages))
+    })
+  }
+
+//  send message
+  static emitSendMessage(message) {
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.SEND_MESSAGE, message)
+  }
+
+  static onSendMessage(callback) {
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.SEND_MESSAGE, (message) => {
+      callback(addMessage(message))
+    })
+  }
 
 }
 

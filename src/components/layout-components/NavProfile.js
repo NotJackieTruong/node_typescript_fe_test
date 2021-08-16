@@ -4,8 +4,6 @@ import {connect, useDispatch, useSelector} from 'react-redux'
 import {
   EditOutlined,
   SettingOutlined,
-  ShopOutlined,
-  QuestionCircleOutlined,
   LogoutOutlined
 } from '@ant-design/icons';
 import Icon from 'components/util-components/Icon';

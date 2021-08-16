@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Layout } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Logo from './Logo';
-import NavPanel from './NavPanel';
 import NavSearch  from './NavSearch';
 import { toggleCollapsedNav, onMobileNavToggle } from 'redux/actions/Theme';
 import { NAV_TYPE_TOP, SIDE_NAV_COLLAPSED_WIDTH, SIDE_NAV_WIDTH } from 'constants/ThemeConstant';
