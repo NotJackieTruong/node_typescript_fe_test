@@ -1,4 +1,11 @@
-import {SET_CHATS, ADD_CHAT, SET_CURRENT_CHAT_MESSAGES, SET_CURRENT_CHAT, ADD_MESSAGE} from "../constants/Chat";
+import {
+  SET_CHATS,
+  ADD_CHAT,
+  SET_CURRENT_CHAT_MESSAGES,
+  SET_CURRENT_CHAT,
+  ADD_MESSAGE,
+  LOAD_MORE_MESSAGES
+} from "../constants/Chat";
 
 const initState = {
   chats: [],
@@ -26,7 +33,8 @@ const ChatReducer = (state = initState, action) => {
       let currentChatMessagesClone = [...state.currentChatMessages]
       currentChatMessagesClone.push(action.payload)
       return {...state, currentChatMessages: currentChatMessagesClone}
-
+    case LOAD_MORE_MESSAGES:
+      return {...state, currentChatMessages: action.payload.concat(state.currentChatMessages)}
     default:
       return {...state}
   }

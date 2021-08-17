@@ -56,7 +56,7 @@ class Utils {
     }
   }
 
-  static formatDate(date){
+  static formatDate(date) {
     let d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -70,7 +70,7 @@ class Utils {
     return [year, month, day].join('-');
   }
 
-  static formatTime(time){
+  static formatTime(time) {
     let d = new Date(time),
       hour = '' + (d.getHours()),
       minute = '' + d.getMinutes(),
@@ -85,6 +85,20 @@ class Utils {
 
     return [hour, minute, second].join(':');
   }
+
+  static checkMongooseObjectId(id) {
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      return true
+    }
+    return false
+  }
+
+  static getRouteMongooseId(location) {
+    let split = location.split("/")
+    let id = split.find(item => this.checkMongooseObjectId(item)) || ""
+    return id
+  }
+
   /**
    * Get first character from first & last sentences of a username
    * @param {String} name - Username

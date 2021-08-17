@@ -1,5 +1,5 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useLocation} from "react-router-dom";
 import {Menu, Grid, Avatar} from "antd";
 import IntlMessage from "../util-components/IntlMessage";
 import Icon from "../util-components/Icon";
@@ -10,7 +10,8 @@ import utils from 'utils'
 import {onMobileNavToggle} from "redux/actions/Theme";
 import {APP_PREFIX_PATH} from "../../configs/AppConfig";
 import {UserOutlined} from "@ant-design/icons";
-import {setCurrentChat} from "../../redux/actions/ChatActions";
+import {setChatNavigationConfig, setCurrentChat} from "../../redux/actions/ChatActions";
+import Utils from "utils";
 
 const {SubMenu} = Menu;
 const {useBreakpoint} = Grid;
@@ -33,45 +34,66 @@ const setDefaultOpen = (key) => {
 };
 
 const SideNavContent = (props) => {
-  const {sideNavTheme, routeInfo, hideGroupTitle, localization, onMobileNavToggle} = props;
+  const {sideNavTheme, hideGroupTitle, localization, onMobileNavToggle} = props;
   const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
   const dispatch = useDispatch()
+  const location = useLocation()
+  const key = Utils.getRouteMongooseId(location.pathname)
+
+  const {activeUsers, chats} = useSelector(state => {
+    return {
+      activeUsers: state.userReducer.activeUsers,
+      chats: state.chatReducer.chats,
+    }
+  })
+  const [navigationConfig, setNavigationConfig] = useState([])
+  const [routeInfo, setRouteInfo] = useState(null)
+
+  useEffect(() => {
+    let config = chats.map(chat => {
+      return {
+        key: chat._id,
+        path: `${APP_PREFIX_PATH}/messages/${chat._id}`,
+        title: chat.name,
+        avatar: chat.avatar,
+        breadcrumb: false,
+      }
+    })
+    setNavigationConfig(config)
+    setRouteInfo(Utils.getRouteInfo(config, location.pathname))
+  }, [chats])
+
+  useEffect(()=>{
+    // if(key && chats){
+    //   let currentChat = chats.find(item => item._id === key)
+    //   console.log({currentChat})
+    //   dispatch(setCurrentChat(currentChat))
+    // }
+  }, [])
+
+  const onClick = ({item, key, keyPath, selectedKeys, domEvent}) => {
+    console.log({item, key, keyPath, selectedKeys, domEvent})
+    let currentChat = chats.find(item => item._id === key)
+    dispatch(setCurrentChat(currentChat))
+  }
+
   const closeMobileNav = () => {
     if (isMobile) {
       onMobileNavToggle(false)
     }
   }
-  const {activeUsers, chats} = useSelector(state => {
-    return {
-      activeUsers: state.userReducer.activeUsers,
-      chats: state.chatReducer.chats
-    }
-  })
 
-  const onSelect = ({item, key, keyPath, selectedKeys, domEvent}) => {
-    console.log({item, key, keyPath, selectedKeys, domEvent})
-    let currentChat = chats.find(item=>item._id === key)
-    dispatch(setCurrentChat(currentChat))
-  }
   return (
     <Menu
       theme={sideNavTheme === SIDE_NAV_LIGHT ? "light" : "dark"}
       mode="inline"
       style={{height: "100%", borderRight: 0}}
-      defaultSelectedKeys={[routeInfo?.key]}
-      defaultOpenKeys={setDefaultOpen(routeInfo?.key)}
+      defaultSelectedKeys={[key]}
+      defaultOpenKeys={setDefaultOpen(key)}
       className={hideGroupTitle ? "hide-group-title" : ""}
-      onSelect={onSelect}
+      onClick={onClick}
     >
-      {chats.map(chat => {
-        return {
-          key: chat._id,
-          path: `${APP_PREFIX_PATH}/messages/${chat._id}`,
-          title: chat.name,
-          avatar: chat.avatar,
-          breadcrumb: false,
-        }
-      }).map((menu) =>
+      {navigationConfig.map((menu) =>
         <Menu.Item key={menu.key} style={{
           height: 'fit-content',
           paddingLeft: '20%',
