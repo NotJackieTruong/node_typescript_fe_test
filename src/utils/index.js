@@ -99,6 +99,10 @@ class Utils {
     return id
   }
 
+  static removeDuplicate(array, prop="_id"){
+    return array.filter((v,i,a)=>a.findIndex(t=>(t[prop] === v[prop]))===i)
+  }
+
   /**
    * Get first character from first & last sentences of a username
    * @param {String} name - Username

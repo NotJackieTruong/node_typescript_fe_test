@@ -7,3 +7,5 @@ export const NAV_TYPE_SIDE = 'SIDE'
 export const NAV_TYPE_TOP = 'TOP'
 export const DIR_LTR = 'ltr'
 export const DIR_RTL = 'rtl'
+export const HEADER_HEIGHT = 70
+export const FOOTER_HEIGHT = 70

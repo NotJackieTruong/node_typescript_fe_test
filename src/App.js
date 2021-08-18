@@ -21,7 +21,7 @@ const App = () => {
     Socket.onSendMessage(dispatchAction)
   })
   return (
-    <div className="App">
+    <div className="App" style={{height: '100%'}}>
       <Router>
         <Switch>
           <Route path="/" component={Views}/>

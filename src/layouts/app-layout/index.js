@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import SideNav from 'components/layout-components/SideNav';
 import Loading from 'components/shared-components/Loading';
 import MobileNav from 'components/layout-components/MobileNav'
-import PageHeader from 'components/layout-components/PageHeader';
 import AppViews from 'views/app-views';
 import {
   Layout,
@@ -17,13 +16,14 @@ import {
   NAV_TYPE_SIDE,
   NAV_TYPE_TOP,
   DIR_RTL,
-  DIR_LTR
+  DIR_LTR, FOOTER_HEIGHT, HEADER_HEIGHT
 } from 'constants/ThemeConstant';
 import utils from 'utils';
 import {useThemeSwitcher} from "react-css-theme-switcher";
-import FooterInput from "../../components/layout-components/FooterInput";
+import CustomHeader from "../../components/layout-components/CustomComponents/CustomHeader";
+import CustomFooter from "../../components/layout-components/CustomComponents/CustomFooter";
 
-const {Content} = Layout;
+const {Content, Header, Footer} = Layout;
 const {useBreakpoint} = Grid;
 
 export const AppLayout = ({navCollapsed, navType, location, direction}) => {
@@ -55,19 +55,24 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
     return {paddingLeft: getLayoutGutter()}
   }
 
+
   return (
-    <Layout>
-      <Layout className="app-container" style={{height: '100%'}}>
-        <SideNav routeInfo={currentRouteInfo}/>
-        <Layout className="app-layout" style={getLayoutDirectionGutter()}>
-          <div className={`app-content ${isNavTop ? 'layout-top-nav' : ''}`} style={{marginTop: 0}}>
-            <PageHeader display={currentRouteInfo?.breadcrumb} title={currentRouteInfo?.title}/>
-            <Content>
-              <AppViews/>
-            </Content>
-          </div>
-          <FooterInput/>
-        </Layout>
+    <Layout style={{height: "100%"}}>
+      <SideNav routeInfo={currentRouteInfo}/>
+      <Layout className="app-container"
+              style={{height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column',...getLayoutDirectionGutter(), }}>
+        <CustomHeader/>
+        <div className="app-layout my-app-layout"
+                style={{overflow: 'hidden', flexGrow: 1, height: '100%'}}>
+          {/*<div className={`app-content ${isNavTop ? 'layout-top-nav' : ''}`} style={{marginTop: 0}}>*/}
+          {/*  /!*<PageHeader display={currentRouteInfo?.breadcrumb} title={currentRouteInfo?.title}/>*!/*/}
+          {/*  <Content>*/}
+          {/*  </Content>*/}
+          {/*</div>*/}
+          <AppViews/>
+        </div>
+        {/*<Footer style={{backgroundColor: 'lightgreen', height: FOOTER_HEIGHT}}/>*/}
+        <CustomFooter/>
       </Layout>
       {isMobile && <MobileNav/>}
     </Layout>

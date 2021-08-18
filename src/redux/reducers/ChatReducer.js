@@ -6,6 +6,7 @@ import {
   ADD_MESSAGE,
   LOAD_MORE_MESSAGES
 } from "../constants/Chat";
+import Utils from "../../utils";
 
 const initState = {
   chats: [],
@@ -34,7 +35,7 @@ const ChatReducer = (state = initState, action) => {
       currentChatMessagesClone.push(action.payload)
       return {...state, currentChatMessages: currentChatMessagesClone}
     case LOAD_MORE_MESSAGES:
-      return {...state, currentChatMessages: action.payload.concat(state.currentChatMessages)}
+      return {...state, currentChatMessages: Utils.removeDuplicate(action.payload.concat(state.currentChatMessages))}
     default:
       return {...state}
   }

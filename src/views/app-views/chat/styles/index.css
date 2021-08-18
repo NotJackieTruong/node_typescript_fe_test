@@ -18,9 +18,9 @@
     display: flex;
 }
 
-.message.mine .bubble-container {
-    justify-content: flex-end;
-}
+/*.message.mine .bubble-container {*/
+/*    justify-content: flex-end;*/
+/*}*/
 
 .message.start .bubble-container .bubble {
     /* margin-top: 10px; */

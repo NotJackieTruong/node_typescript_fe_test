@@ -1,20 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import "../styles/index.css"
 import Utils from "../../../../utils";
+import ReactionDropdown from "./ReactionDropdown";
 
 const Message = ({isSender, messageInfo, startSequence, endSequence, showTimestamp}) => {
-  const style = {
-    backgroundColor: isSender ? 'lightblue' : '#fff',
-    color: isSender ? '#fff' : '#000',
-    width: 'fit-content',
-    maxWidth: '50%',
-    overflowWrap: 'break-word',
-    padding: 8,
-    borderRadius: 16,
-  }
   const timestamp = Utils.formatDate(messageInfo.createdAt) + ' ' + Utils.formatTime(messageInfo.createdAt)
+  const [hover, setHover] = useState(false)
+  const onMouseOver = ()=>{
+    setHover(true)
+  }
+  const onMouseLeave = ()=>{
+    setHover(false)
+  }
   return (
-    <div className={[
+    <div onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} className={[
       'message',
       `${isSender ? 'mine' : ''}`,
       `${startSequence ? 'start' : ''}`,
@@ -27,10 +26,11 @@ const Message = ({isSender, messageInfo, startSequence, endSequence, showTimesta
         </div>
       }
 
-      <div className="bubble-container">
+      <div className={`bubble-container ${isSender && 'flex-row-reverse'}`}>
         <div className="bubble">
           { messageInfo.message }
         </div>
+        {true && <ReactionDropdown message={messageInfo}/>}
       </div>
     </div>
   )

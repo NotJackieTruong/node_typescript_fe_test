@@ -2,12 +2,12 @@ import React, {useEffect, useRef, useState} from "react";
 import Socket from "../../../socket/Socket";
 import {useDispatch, useSelector} from "react-redux";
 import Message from "./component/Message";
-import InfiniteScroll from 'react-infinite-scroller'
 import CustomSpin from "./component/CustomSpin";
 
 const Chat = () => {
   const dispatch = useDispatch()
   const chatEndRef = useRef()
+  const messageListRef = useRef()
 
   const {currentChat, currentChatMessages, userInfo} = useSelector(state => {
     return {
@@ -19,15 +19,20 @@ const Chat = () => {
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [firstTime, setFirstTime] = useState(true)
 
   useEffect(() => {
     Socket.emitGetCurrentChatMessages(currentChat._id)
   }, [currentChat])
 
   useEffect(() => {
-    // chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
-    console.log({currentChatMessages})
+    firstTime && chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
+    // console.log({currentChatMessages})
   }, [currentChatMessages])
+
+  useEffect(() => {
+    console.log({loading, hasMore})
+  }, [loading, hasMore])
 
   const renderMessage = () => {
     return currentChatMessages.map((chat, index) => {
@@ -78,51 +83,45 @@ const Chat = () => {
 
   const onLoadMore = () => {
     console.log("Loading more...")
-    // setPage(page + 1)
     setLoading(true)
     Socket.emitLoadMoreMessages(currentChat._id, {
       startPage: page + 1,
       docsPerPage: 20
     })
+    Socket.onLoadMoreMessages((action) => {
+      console.log(action)
+      setLoading(false)
+      setPage(page + 1)
+      action.payload?.length > 0 && dispatch(action)
+    })
 
   }
 
-  useEffect(() => {
-    Socket.onLoadMoreMessages((action) => {
-      console.log({action})
-      setLoading(false)
-      setPage(page + 1)
-      setHasMore(action.payload?.length < 0)
-      action.payload?.length>0 && dispatch(action)
+  const handleOnScroll = (e) => {
+    console.log({})
+    let scrollTop = e.target.scrollTop
+    let scrollHeight = e.target.scrollHeight
+    let clientHeight = e.target.clientHeight
+    if (scrollTop === 0) {
+      onLoadMore()
+      setFirstTime(false)
+    }
+    // check if a div scrolls to bottom
+    if (scrollHeight - scrollTop === clientHeight) {
+      setFirstTime(true)
+    } else {
+      setFirstTime(false)
+    }
 
-    })
-  })
-
+  }
 
   return (
-    <div style={{}}>
+    <div className={'pr-3 pl-3 pb-3'} onScroll={handleOnScroll} style={{overflow: 'auto', height: '100%'}}>
+      {loading && <CustomSpin/>}
       {renderMessage()}
       <div ref={chatEndRef}/>
     </div>
-    // <div style={{height: '700px', width: '100%', overflowY: "auto"}}>
-    //   {loading && hasMore && <CustomSpin/>}
-    //   <InfiniteScroll
-    //     pageStart={0}
-    //     loadMore={() => {
-    //       onLoadMore()
-    //     }}
-    //     hasMore={hasMore}
-    //     // loader={<div className="loader" key={0}>Loading ...</div>}
-    //     useWindow={false}
-    //     isReverse={true}
-    //     initialLoad={false}
-    //     threshold={400}
-    //   >
-    //     {renderMessage()}
-    //   </InfiniteScroll>
-    //   <div ref={chatEndRef}/>
-    //
-    // </div>
+
   )
 }
 

@@ -91,16 +91,18 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
       collapsed={isMobile}
       style={{top: 0, height: '100%'}}
     >
-      <div className={"side-nav-header d-flex align-items-center justify-content-between"}
+      <div className={`side-nav-header d-flex align-items-center ${isMobile? 'justify-content-center': 'justify-content-between'}`}
            style={{padding: '0px 8px', margin: '4px 0 8px 0'}}>
-        <NavProfile/>
-        <span className={"font-weight-bold"}>Clone</span>
+        {!isMobile && <>
+          <NavProfile/>
+          <span className={"font-weight-bold"}>Clone</span>
+        </>}
         <Button shape={"circle"} icon={<EditOutlined/>} onClick={showModal}/>
       </div>
-      <Space direction={"vertical"} style={{width: '100%', padding: '0px 8px', margin: '4px 0 8px 0'}}>
+      {!isMobile && <Space direction={"vertical"} style={{width: '100%', padding: '0px 8px', margin: '4px 0 8px 0'}}>
         <Search placeholder="Search..." size={"small"} onSearch={onSearch}
                 enterButton={<Button icon={<SearchOutlined/>}/>}/>
-      </Space>
+      </Space>}
       <Scrollbars autoHide>
         <MenuContent
           type={NAV_TYPE_SIDE}
