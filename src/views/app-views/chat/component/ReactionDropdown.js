@@ -3,16 +3,42 @@ import "../styles/index.css"
 import Utils from "../../../../utils";
 import {Button, Dropdown, Menu} from "antd";
 import {SmileOutlined} from '@ant-design/icons'
+import {useDispatch, useSelector} from "react-redux";
+import Socket from "../../../../socket/Socket";
 
 const reactionArray = [
   '❤', '😂', '😮', '😞', '😡', '👍', '👎'
 ]
 
-
-
 const ReactionDropdown = (props) => {
+  const dispatch = useDispatch()
+  const {userInfo, currentChat} = useSelector(state=>{
+    return {
+      userInfo: state.auth.userInfo,
+      currentChat: state.chatReducer.currentChat
+    }
+  })
   const onSelect= ({item , key})=>{
-    console.log("Select: ", key)
+    let obj = {
+      user: userInfo._id,
+      reaction: key,
+    }
+    let reactionArray = [...props.message.reactions]
+    let index = reactionArray.findIndex(item=> item.user === userInfo._id)
+    console.log("Select: ", index)
+    if(index>=0){
+      reactionArray[index] = obj
+    } else {
+      reactionArray.unshift(obj)
+    }
+    Socket.emitReactMessage({
+      messageId: props.message._id,
+      chatId: currentChat._id,
+      reactions: reactionArray
+    })
+    Socket.onReactMessage((action)=>{
+      dispatch(action)
+    })
   }
 
   const menu = ()=>(
@@ -26,7 +52,7 @@ const ReactionDropdown = (props) => {
   )
   return (
     <Dropdown overlay={menu} trigger={['click']}>
-      <Button className={'align-self-center mr-2'} shape={'circle'} icon={<SmileOutlined/>}/>
+      <Button size={'small'} ghost={true} className={`align-self-center ${props.isSender? 'mr-2' : 'ml-2'}`} shape={'circle'} icon={<SmileOutlined/>}/>
     </Dropdown>
   )
 }

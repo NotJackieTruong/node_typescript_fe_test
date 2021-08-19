@@ -4,7 +4,7 @@ import {
   SET_CURRENT_CHAT_MESSAGES,
   SET_CURRENT_CHAT,
   ADD_MESSAGE,
-  LOAD_MORE_MESSAGES
+  LOAD_MORE_MESSAGES, UPDATE_MESSAGE
 } from "../constants/Chat";
 import Utils from "../../utils";
 
@@ -15,12 +15,14 @@ const initState = {
 }
 
 const ChatReducer = (state = initState, action) => {
+  let currentChatMessagesClone = [...state.currentChatMessages]
+  let chatsClone = [...state.chats]
+
   switch (action.type) {
     case SET_CHATS:
       return {...state, chats: action.payload}
 
     case ADD_CHAT:
-      let chatsClone = [...state.chats]
       chatsClone.unshift(action.payload)
       return {...state, chats: chatsClone}
 
@@ -31,11 +33,15 @@ const ChatReducer = (state = initState, action) => {
       return {...state, currentChatMessages: action.payload}
 
     case ADD_MESSAGE:
-      let currentChatMessagesClone = [...state.currentChatMessages]
       currentChatMessagesClone.push(action.payload)
       return {...state, currentChatMessages: currentChatMessagesClone}
     case LOAD_MORE_MESSAGES:
       return {...state, currentChatMessages: Utils.removeDuplicate(action.payload.concat(state.currentChatMessages))}
+    case UPDATE_MESSAGE:
+      let index = state.currentChatMessages.findIndex(item => item._id === action.payload._id)
+      currentChatMessagesClone[index] = action.payload
+      return {...state, currentChatMessages: currentChatMessagesClone}
+
     default:
       return {...state}
   }

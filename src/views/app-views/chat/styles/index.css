@@ -3,6 +3,10 @@
     flex-direction: column;
 }
 
+.message .bubble {
+    position: relative;
+}
+
 .message .timestamp {
     display: flex;
     justify-content: center;
@@ -61,4 +65,8 @@
     border-bottom-left-radius: 20px;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
+}
+
+.message .reaction-container:hover {
+    cursor: pointer;
 }

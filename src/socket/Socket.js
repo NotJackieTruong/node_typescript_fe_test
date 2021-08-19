@@ -2,7 +2,14 @@ import {io} from "socket.io-client";
 import {env} from '../configs/EnvironmentConfig'
 import CONSTANTS from "../utils/constants";
 import {setActiveUsers} from "../redux/actions/UserActions";
-import {addChat, addMessage, loadMoreMessages, setChats, setCurrentChatMessages} from "../redux/actions/ChatActions";
+import {
+  addChat,
+  addMessage,
+  loadMoreMessages,
+  setChats,
+  setCurrentChatMessages,
+  updateMessage
+} from "../redux/actions/ChatActions";
 import {setUserInfo} from "../redux/actions/Auth";
 import {USER_INFO} from "../redux/constants/Auth";
 import Utils from "../utils";
@@ -105,13 +112,24 @@ class Socket {
   }
 
 //  load more messages
-  static emitLoadMoreMessages(chatId, options){
+  static emitLoadMoreMessages(chatId, options) {
     this.socket.emit(CONSTANTS.SOCKET_EVENTS.LOAD_MORE_MESSAGES, chatId, options)
   }
 
   static onLoadMoreMessages(callback) {
     this.socket.on(CONSTANTS.SOCKET_EVENTS.LOAD_MORE_MESSAGES, (messages) => {
       callback(loadMoreMessages(messages))
+    })
+  }
+
+//  react a message
+  static emitReactMessage(data){
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.REACT_MESSAGE, data)
+  }
+
+  static onReactMessage(callback){
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.REACT_MESSAGE, (message)=>{
+      callback(updateMessage(message))
     })
   }
 }

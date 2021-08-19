@@ -3,6 +3,7 @@ import Socket from "../../../socket/Socket";
 import {useDispatch, useSelector} from "react-redux";
 import Message from "./component/Message";
 import CustomSpin from "./component/CustomSpin";
+import {Modal} from "antd";
 
 const Chat = () => {
   const dispatch = useDispatch()
@@ -20,6 +21,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [firstTime, setFirstTime] = useState(true)
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     Socket.emitGetCurrentChatMessages(currentChat._id)
@@ -27,7 +29,7 @@ const Chat = () => {
 
   useEffect(() => {
     firstTime && chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
-    // console.log({currentChatMessages})
+    console.log({currentChatMessages})
   }, [currentChatMessages])
 
   useEffect(() => {
@@ -35,8 +37,8 @@ const Chat = () => {
   }, [loading, hasMore])
 
   const renderMessage = () => {
-    return currentChatMessages.map((chat, index) => {
-      let currentMessage = chat
+    return currentChatMessages.map((message, index) => {
+      let currentMessage = message
       let prevMessage = currentChatMessages[index - 1]
       let nextMessage = currentChatMessages[index + 1]
       let startSequence = true
@@ -72,8 +74,9 @@ const Chat = () => {
           isSender={isSender}
           startSequence={startSequence}
           endSequence={endSequence}
-          messageInfo={chat}
+          messageInfo={message}
           showTimestamp={showTimestamp}
+          showModal={showModal}
         />
       )
 
@@ -115,11 +118,36 @@ const Chat = () => {
 
   }
 
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    console.log("ok")
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    console.log("cancel")
+
+  };
+
+  useEffect(()=>{
+    console.log({isModalVisible})
+  }, [isModalVisible])
+
   return (
     <div className={'pr-3 pl-3 pb-3'} onScroll={handleOnScroll} style={{overflow: 'auto', height: '100%'}}>
       {loading && <CustomSpin/>}
       {renderMessage()}
       <div ref={chatEndRef}/>
+      <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
     </div>
 
   )
