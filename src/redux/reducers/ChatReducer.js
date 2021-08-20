@@ -4,14 +4,15 @@ import {
   SET_CURRENT_CHAT_MESSAGES,
   SET_CURRENT_CHAT,
   ADD_MESSAGE,
-  LOAD_MORE_MESSAGES, UPDATE_MESSAGE
+  LOAD_MORE_MESSAGES, UPDATE_MESSAGE, SET_CURRENT_REPLIED_MESSAGE
 } from "../constants/Chat";
 import Utils from "../../utils";
 
 const initState = {
   chats: [],
   currentChat: {},
-  currentChatMessages: []
+  currentChatMessages: [],
+  currentRepliedMessage: {}
 }
 
 const ChatReducer = (state = initState, action) => {
@@ -27,20 +28,25 @@ const ChatReducer = (state = initState, action) => {
       return {...state, chats: chatsClone}
 
     case SET_CURRENT_CHAT:
-      return {...state, currentChat: action.payload}
+      return {...state, currentChat: action.payload, currentRepliedMessage: {}}
 
     case SET_CURRENT_CHAT_MESSAGES:
-      return {...state, currentChatMessages: action.payload}
+      return {...state, currentChatMessages: action.payload, currentRepliedMessage: {}}
 
     case ADD_MESSAGE:
       currentChatMessagesClone.push(action.payload)
       return {...state, currentChatMessages: currentChatMessagesClone}
+
     case LOAD_MORE_MESSAGES:
       return {...state, currentChatMessages: Utils.removeDuplicate(action.payload.concat(state.currentChatMessages))}
+
     case UPDATE_MESSAGE:
       let index = state.currentChatMessages.findIndex(item => item._id === action.payload._id)
       currentChatMessagesClone[index] = action.payload
       return {...state, currentChatMessages: currentChatMessagesClone}
+
+    case SET_CURRENT_REPLIED_MESSAGE:
+      return {...state, currentRepliedMessage: action.payload}
 
     default:
       return {...state}

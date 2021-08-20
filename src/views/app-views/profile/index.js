@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {PageHeader, Input, Form, Button, Checkbox, notification} from "antd";
+import {PageHeader, Input, Form, Button, Checkbox, notification, Image} from "antd";
 import CONSTANTS from "../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import ApiService from "../../../services/ApiService";
 import {setUserInfo} from "../../../redux/actions/Auth";
 import './index.css'
+import ImgCrop from 'antd-img-crop';
 
 const Profile = () => {
   const dispatch = useDispatch()
   const [data, setData] = useState({})
   const [mode, setMode] = useState("view")
+  const [image, setImage] = useState("")
   const userInfo = useSelector(state => {
     return state.auth.userInfo
   })
@@ -49,6 +51,18 @@ const Profile = () => {
     console.log('Failed:', errorInfo);
   };
 
+  const onChange = (event)=>{
+    let files = event.target.files
+    let reader = new FileReader()
+    reader.onload = (e)=>{
+      console.log({readerEvent: e.target.result})
+      setImage(e.target.result)
+    }
+    reader.readAsDataURL(files[0])
+    console.log({files, reader})
+
+  }
+
   return (
     <div style={{
       backgroundColor: '#fff',
@@ -61,6 +75,11 @@ const Profile = () => {
       <PageHeader
         title={"My Profile"}
       />
+      {image && <Image width={200} src={image}/>}
+      <ImgCrop rotate >
+        <Input type={'file'} onChange={onChange}/>
+
+      </ImgCrop>
       <Form
         name="basic"
         labelCol={{span: 8}}

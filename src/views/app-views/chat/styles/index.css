@@ -51,7 +51,7 @@
     background: #f4f4f8;
     padding: 10px 15px;
     border-radius: 20px;
-    max-width: 75%;
+    max-width: 55%;
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
     border-top-right-radius: 20px;
@@ -69,4 +69,35 @@
 
 .message .reaction-container:hover {
     cursor: pointer;
+}
+
+.message .reply-container{
+    display: flex;
+    position: relative;
+    margin-top: 8px;
+}
+
+.message .reply {
+    background-color: #d6ceff;
+    border-radius: 20px;
+    padding: 10px 15px;
+    width: fit-content;
+
+}
+
+.message.mine .reply-container{
+    justify-content: flex-end;
+}
+.message.mine.start .has-reply .bubble {
+    margin-top: -10px;
+    margin-bottom: 0;
+}
+
+.message.start .has-reply .bubble {
+    margin-top: -10px;
+    margin-bottom: 0;
+}
+
+.message .reply{
+    max-width: 50%;
 }

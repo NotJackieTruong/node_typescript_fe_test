@@ -44,6 +44,7 @@ const Chat = () => {
       let startSequence = true
       let endSequence = true
       let showTimestamp = true
+      let showReply = false
       let isSender = currentMessage.sender._id === userInfo._id || currentMessage.sender === userInfo._id
 
       //  check time sequence(ms)
@@ -68,6 +69,10 @@ const Chat = () => {
         }
       }
 
+      if(message.repliesTo){
+        showReply = true
+      }
+
       return (
         <Message
           key={index}
@@ -76,6 +81,7 @@ const Chat = () => {
           endSequence={endSequence}
           messageInfo={message}
           showTimestamp={showTimestamp}
+          showReply={showReply}
           showModal={showModal}
         />
       )
@@ -117,7 +123,6 @@ const Chat = () => {
     }
 
   }
-
 
   const showModal = () => {
     setIsModalVisible(true);

@@ -23,9 +23,8 @@ class Socket {
   // connected
   static onConnect(user = Utils.getItem(USER_INFO)) {
     this.socket.on("connect", () => {
-      console.log('hello', this.socket.id, user)
+      console.log('Hello', this.socket.id, user)
       if (user !== null && user !== undefined && JSON.stringify(user) !== "{}") {
-        console.log("emit")
         this.socket.emit(CONSTANTS.SOCKET_EVENTS.CONNECTED, user)
       }
     })
@@ -83,7 +82,6 @@ class Socket {
 
   static onGetChats(callback) {
     this.socket.on(CONSTANTS.SOCKET_EVENTS.GET_CHATS, (chats) => {
-      console.log({chats})
       callback(setChats(chats))
     })
   }
@@ -95,7 +93,6 @@ class Socket {
 
   static onGetCurrentChatMessages(callback) {
     this.socket.on(CONSTANTS.SOCKET_EVENTS.GET_CURRENT_CHAT_MESSAGES, (messages) => {
-      console.log("Messages: ", messages)
       callback(setCurrentChatMessages(messages))
     })
   }

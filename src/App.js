@@ -9,7 +9,7 @@ import Socket from "./socket/Socket";
 const App = () => {
   const dispatch = useDispatch()
   const dispatchAction = (action) => {
-    // console.log("action: ", action)
+    console.log("action: ", action)
     dispatch(action)
   }
   useEffect(() => {

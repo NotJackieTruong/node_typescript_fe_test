@@ -12,21 +12,21 @@ const reactionArray = [
 
 const ReactionDropdown = (props) => {
   const dispatch = useDispatch()
-  const {userInfo, currentChat} = useSelector(state=>{
+  const {userInfo, currentChat} = useSelector(state => {
     return {
       userInfo: state.auth.userInfo,
       currentChat: state.chatReducer.currentChat
     }
   })
-  const onSelect= ({item , key})=>{
+  const onSelect = ({item, key}) => {
     let obj = {
       user: userInfo._id,
       reaction: key,
     }
     let reactionArray = [...props.message.reactions]
-    let index = reactionArray.findIndex(item=> item.user === userInfo._id)
+    let index = reactionArray.findIndex(item => item.user === userInfo._id || item.user._id === userInfo._id)
     console.log("Select: ", index)
-    if(index>=0){
+    if (index >= 0) {
       reactionArray[index] = obj
     } else {
       reactionArray.unshift(obj)
@@ -36,14 +36,14 @@ const ReactionDropdown = (props) => {
       chatId: currentChat._id,
       reactions: reactionArray
     })
-    Socket.onReactMessage((action)=>{
+    Socket.onReactMessage((action) => {
       dispatch(action)
     })
   }
 
-  const menu = ()=>(
+  const menu = () => (
     <Menu onClick={onSelect} className={'d-flex flex-row pl-2 pr-2'} style={{borderRadius: 50}}>
-      {reactionArray.map((item, index)=>(
+      {reactionArray.map((item, index) => (
         <Menu.Item key={item} className={'p-2'}>
           <h2 className={'mb-0'}>{item}</h2>
         </Menu.Item>
@@ -52,7 +52,7 @@ const ReactionDropdown = (props) => {
   )
   return (
     <Dropdown overlay={menu} trigger={['click']}>
-      <Button size={'small'} ghost={true} className={`align-self-center ${props.isSender? 'mr-2' : 'ml-2'}`} shape={'circle'} icon={<SmileOutlined/>}/>
+      <SmileOutlined className={`align-self-center ${props.isSender ? 'mr-2' : 'ml-2'}`}/>
     </Dropdown>
   )
 }

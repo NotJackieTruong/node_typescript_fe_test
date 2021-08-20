@@ -4,7 +4,7 @@ import {
   SET_CURRENT_CHAT_MESSAGES,
   SET_CURRENT_CHAT,
   ADD_MESSAGE,
-  LOAD_MORE_MESSAGES, UPDATE_MESSAGE
+  LOAD_MORE_MESSAGES, UPDATE_MESSAGE, SET_CURRENT_REPLIED_MESSAGE
 } from "../constants/Chat";
 
 export const setChats = (data)=>{
@@ -52,6 +52,13 @@ export const loadMoreMessages = (data)=>{
 export const updateMessage = (data)=>{
   return{
     type: UPDATE_MESSAGE,
+    payload: data
+  }
+}
+
+export const setCurrentRepliedMessage = (data)=>{
+  return{
+    type: SET_CURRENT_REPLIED_MESSAGE,
     payload: data
   }
 }
