@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Menu, Dropdown, Avatar} from "antd";
 import {connect, useDispatch, useSelector} from 'react-redux'
 import {
@@ -37,7 +37,7 @@ export const NavProfile = () => {
     dispatch(signOut())
   }
 
-  const profileImg = userInfo.avatar;
+  const profileImg = userInfo.avatar.url;
   const profileMenu = (
     <div className="nav-profile nav-dropdown">
       <div className="nav-profile-header">

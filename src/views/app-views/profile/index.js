@@ -6,6 +6,9 @@ import ApiService from "../../../services/ApiService";
 import {setUserInfo} from "../../../redux/actions/Auth";
 import './index.css'
 import ImgCrop from 'antd-img-crop';
+import {CameraFilled, CloseOutlined, CheckOutlined} from '@ant-design/icons'
+import AvatarImageCropper from "react-avatar-image-cropper/lib/react-avatar-image-cropper";
+import Utils from "../../../utils";
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -18,6 +21,7 @@ const Profile = () => {
 
   useEffect(() => {
     console.log({userInfo})
+    setImage(userInfo.avatar.url)
   }, [userInfo])
 
   const onEdit = () => {
@@ -31,14 +35,14 @@ const Profile = () => {
   const onFinish = (values) => {
     console.log('Success:', values);
     ApiService.updateUser({...values, fullName: values.firstName + " " + values.lastName}, userInfo._id).then(res => {
-      if(res?.success){
+      if (res?.success) {
         dispatch(setUserInfo(res.data.user))
         notification.success({
           message: res.message,
         })
       } else {
         notification.error({
-          message: res?.message??"Error while updating",
+          message: res?.message ?? "Error while updating",
         })
       }
       setMode("view")
@@ -51,16 +55,38 @@ const Profile = () => {
     console.log('Failed:', errorInfo);
   };
 
-  const onChange = (event)=>{
+  const onChange = (event) => {
     let files = event.target.files
     let reader = new FileReader()
-    reader.onload = (e)=>{
+    reader.onload = (e) => {
       console.log({readerEvent: e.target.result})
       setImage(e.target.result)
     }
     reader.readAsDataURL(files[0])
     console.log({files, reader})
 
+  }
+
+  const imageCropActions = [
+    <CloseOutlined className={'align-self-center mr-1 ml-1'} key={0}
+                   style={{color: '#fff', fontSize: CONSTANTS.STYLES.ICON_SIZE * 1.5}}/>,
+    <CheckOutlined className={'align-self-center mr-1 ml-1'} key={1}
+                   style={{color: '#fff', fontSize: CONSTANTS.STYLES.ICON_SIZE * 1.5}}/>,
+    // <button key={0}>test_cancel</button>,
+    // <button key={1}>test_apply</button>,
+  ]
+
+  const onApply = (event) => {
+    console.log("Apply event: ", event)
+    const blobFile = event
+    let reader = new FileReader()
+    reader.readAsArrayBuffer(blobFile)
+    reader.onload = (e) => {
+      const buffer = e.target.result
+      const convertedBuffer = Utils.convertBufferToUrl(buffer)
+      console.log({buffer, convertedBuffer})
+      setImage(convertedBuffer)
+    }
   }
 
   return (
@@ -75,12 +101,34 @@ const Profile = () => {
       <PageHeader
         title={"My Profile"}
       />
-      {image && <Image width={200} src={image}/>}
-      <ImgCrop rotate >
-        <Input type={'file'} onChange={onChange}/>
+      {/*{image && <Image width={200} src={image}/>}*/}
+      {/*<ImgCrop rotate >*/}
+      {/*  <Input type={'file'} onChange={onChange}/>*/}
 
-      </ImgCrop>
+      {/*</ImgCrop>*/}
+      <div className={'avatar-cropper-container'} style={{
+        width: 260,
+        height: 260,
+        margin: "auto",
+        backgroundImage: `url("${image}")`,
+        backgroundSize: 'contain'
+        // backgroundPosition: 'center',
+      }}>
+        <AvatarImageCropper
+          text={"Change your Avatar"}
+          actions={imageCropActions}
+          icon={<CameraFilled style={{color: '#fff', fontSize: CONSTANTS.STYLES.ICON_SIZE * 2.5}}/>}
+          maxSize={1024 * 1024 * 2}
+          apply={onApply}
+          isBack={true}
+          rootStyle={{
+            borderRadius: '100%',
+            overflow: 'hidden'
+          }}
+        />
+      </div>
       <Form
+        className={'mt-5'}
         name="basic"
         labelCol={{span: 8}}
         wrapperCol={{span: 16}}
@@ -98,7 +146,7 @@ const Profile = () => {
           rules={[{required: true, message: 'Please input your first name!'}]}
           initialValue={userInfo.firstName}
         >
-          <Input disabled={mode==="view"} />
+          <Input disabled={mode === "view"}/>
         </Form.Item>
 
         <Form.Item
@@ -107,7 +155,7 @@ const Profile = () => {
           rules={[{required: true, message: 'Please input your last name!'}]}
           initialValue={userInfo.lastName}
         >
-          <Input disabled={mode==="view"}/>
+          <Input disabled={mode === "view"}/>
         </Form.Item>
 
         <Form.Item
@@ -116,7 +164,7 @@ const Profile = () => {
           rules={[{required: true, message: 'Please input your email!'}]}
           initialValue={userInfo.email}
         >
-          <Input disabled={mode==="view"}/>
+          <Input disabled={mode === "view"}/>
         </Form.Item>
 
         <Form.Item wrapperCol={{offset: 8, span: 16}}>
@@ -138,6 +186,7 @@ const Profile = () => {
 
         </Form.Item>
       </Form>
+
     </div>
   )
 }

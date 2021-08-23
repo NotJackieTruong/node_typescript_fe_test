@@ -99,6 +99,12 @@ class Utils {
     return id
   }
 
+  static convertBufferToUrl(buffer){
+    const blob = new Blob([buffer])
+    const url = URL.createObjectURL(blob)
+    return url
+  }
+
   static removeDuplicate(array, prop="_id"){
     return array.filter((v,i,a)=>a.findIndex(t=>(t[prop] === v[prop]))===i)
   }

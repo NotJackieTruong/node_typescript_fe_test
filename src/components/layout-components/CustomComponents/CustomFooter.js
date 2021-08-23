@@ -22,7 +22,6 @@ const CustomFooter = () => {
   const inputFileRef = useRef()
 
   useEffect(() => {
-    console.log({current: inputRef.current})
     currentRepliedMessage && Object.keys(currentRepliedMessage).length > 0 && inputRef.current?.focus()
   }, [currentRepliedMessage])
 

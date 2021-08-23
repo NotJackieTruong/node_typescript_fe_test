@@ -49,8 +49,8 @@ class Socket {
   }
 
   static onLogin(callback) {
-    this.socket.on(CONSTANTS.SOCKET_EVENTS.LOG_IN, (user) => {
-      callback(setUserInfo(user))
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.LOG_IN, (users) => {
+      callback(setActiveUsers(users))
     })
   }
 
@@ -127,6 +127,18 @@ class Socket {
   static onReactMessage(callback){
     this.socket.on(CONSTANTS.SOCKET_EVENTS.REACT_MESSAGE, (message)=>{
       callback(updateMessage(message))
+    })
+  }
+
+//  update user profile
+  static emitUpdateUser(data){
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.UPDATE_USER, data)
+
+  }
+
+  static onUpdateUser(callback){
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.UPDATE_USER, (user)=>{
+      callback(setUserInfo(user))
     })
   }
 }
