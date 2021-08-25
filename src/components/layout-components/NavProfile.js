@@ -10,6 +10,7 @@ import Icon from 'components/util-components/Icon';
 import {signOut} from 'redux/actions/Auth';
 import {APP_PREFIX_PATH} from "../../configs/AppConfig";
 import Socket from "../../socket/Socket";
+import {env} from "../../configs/EnvironmentConfig";
 
 const menuItem = [
   {
@@ -32,12 +33,12 @@ export const NavProfile = () => {
   })
   const dispatch = useDispatch()
 
-  const onSignOut = ()=>{
+  const onSignOut = () => {
     Socket.emitLogout(userInfo)
     dispatch(signOut())
   }
 
-  const profileImg = userInfo.avatar.url;
+  const profileImg = env.API_ENDPOINT_URL + '/' + userInfo.avatar.url;
   const profileMenu = (
     <div className="nav-profile nav-dropdown">
       <div className="nav-profile-header">

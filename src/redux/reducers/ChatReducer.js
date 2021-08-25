@@ -4,7 +4,7 @@ import {
   SET_CURRENT_CHAT_MESSAGES,
   SET_CURRENT_CHAT,
   ADD_MESSAGE,
-  LOAD_MORE_MESSAGES, UPDATE_MESSAGE, SET_CURRENT_REPLIED_MESSAGE
+  LOAD_MORE_MESSAGES, UPDATE_MESSAGE, SET_CURRENT_REPLIED_MESSAGE, DELETE_CHAT
 } from "../constants/Chat";
 import Utils from "../../utils";
 
@@ -47,6 +47,10 @@ const ChatReducer = (state = initState, action) => {
 
     case SET_CURRENT_REPLIED_MESSAGE:
       return {...state, currentRepliedMessage: action.payload}
+
+    case DELETE_CHAT:
+
+      return {...state, chats: chatsClone.filter(item=> item._id !== action)}
 
     default:
       return {...state}

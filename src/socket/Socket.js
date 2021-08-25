@@ -4,7 +4,7 @@ import CONSTANTS from "../utils/constants";
 import {setActiveUsers} from "../redux/actions/UserActions";
 import {
   addChat,
-  addMessage,
+  addMessage, deleteChat,
   loadMoreMessages,
   setChats,
   setCurrentChatMessages,
@@ -86,6 +86,17 @@ class Socket {
     })
   }
 
+  // delete a chat
+  static emitDeleteChat(chatId){
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.DELETE_CHAT, chatId)
+  }
+
+  static onDeleteChat(callback){
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.DELETE_CHAT, (chatId)=>{
+      callback(deleteChat(chatId))
+    })
+  }
+
   // get messages
   static emitGetCurrentChatMessages(chatId) {
     this.socket.emit(CONSTANTS.SOCKET_EVENTS.GET_CURRENT_CHAT_MESSAGES, chatId)
@@ -131,14 +142,15 @@ class Socket {
   }
 
 //  update user profile
-  static emitUpdateUser(data){
-    this.socket.emit(CONSTANTS.SOCKET_EVENTS.UPDATE_USER, data)
+  static emitUpdateUserProfileImage(data){
+    this.socket.emit(CONSTANTS.SOCKET_EVENTS.UPDATE_USER_PROFILE_IMAGE, data)
 
   }
 
-  static onUpdateUser(callback){
-    this.socket.on(CONSTANTS.SOCKET_EVENTS.UPDATE_USER, (user)=>{
-      callback(setUserInfo(user))
+  static onUpdateUserProfileImage(callback){
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.UPDATE_USER_PROFILE_IMAGE, (user)=>{
+      // callback(setUserInfo(user))
+      console.log("Uploaded image")
     })
   }
 }

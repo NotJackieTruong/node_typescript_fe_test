@@ -12,6 +12,7 @@ import {APP_PREFIX_PATH} from "../../configs/AppConfig";
 import {UserOutlined} from "@ant-design/icons";
 import {setChatNavigationConfig, setCurrentChat} from "../../redux/actions/ChatActions";
 import Utils from "utils";
+import CustomMenuItem from "./CustomComponents/CustomMenuItem";
 
 const {SubMenu} = Menu;
 const {useBreakpoint} = Grid;
@@ -104,6 +105,15 @@ const SideNavContent = (props) => {
           <span>{menu?.title}</span>
           {menu.path ? <Link onClick={() => closeMobileNav()} to={menu.path}/> : null}
         </Menu.Item>
+        // <CustomMenuItem
+        //   key={menu.key}
+        //   avatar={menu.avatar}
+        //   title={menu.title}
+        //   path={menu.path}
+        //   closeMobileNav={()=>{
+        //     closeMobileNav()
+        //   }}
+        // />
       )}
     </Menu>
   );

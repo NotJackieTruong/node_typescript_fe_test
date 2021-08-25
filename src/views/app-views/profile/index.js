@@ -9,6 +9,8 @@ import ImgCrop from 'antd-img-crop';
 import {CameraFilled, CloseOutlined, CheckOutlined} from '@ant-design/icons'
 import AvatarImageCropper from "react-avatar-image-cropper/lib/react-avatar-image-cropper";
 import Utils from "../../../utils";
+import Socket from "../../../socket/Socket";
+import {env} from "../../../configs/EnvironmentConfig";
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -21,7 +23,7 @@ const Profile = () => {
 
   useEffect(() => {
     console.log({userInfo})
-    setImage(userInfo.avatar.url)
+    setImage(env.API_ENDPOINT_URL + '/' + userInfo.avatar.url)
   }, [userInfo])
 
   const onEdit = () => {
@@ -80,12 +82,18 @@ const Profile = () => {
     console.log("Apply event: ", event)
     const blobFile = event
     let reader = new FileReader()
-    reader.readAsArrayBuffer(blobFile)
+    reader.readAsDataURL(blobFile)
     reader.onload = (e) => {
-      const buffer = e.target.result
-      const convertedBuffer = Utils.convertBufferToUrl(buffer)
-      console.log({buffer, convertedBuffer})
-      setImage(convertedBuffer)
+      // const buffer = e.target.result
+      // const convertedBuffer = Utils.convertBufferToUrl(buffer)
+      // console.log({buffer, convertedBuffer})
+      // setImage(convertedBuffer)
+      console.log("Image: ", e.target.result)
+      Socket.emitUpdateUserProfileImage({
+        _id: userInfo._id,
+        avatarId: userInfo.avatar._id,
+        data: e.target.result
+      })
     }
   }
 
