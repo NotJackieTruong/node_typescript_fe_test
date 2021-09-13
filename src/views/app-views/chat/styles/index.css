@@ -3,6 +3,10 @@
     flex-direction: column;
 }
 
+.message.avatar-shown{
+    margin-left: 48px;
+}
+
 .message .bubble {
     position: relative;
 }

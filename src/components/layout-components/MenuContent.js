@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {Menu, Grid, Avatar} from "antd";
 import IntlMessage from "../util-components/IntlMessage";
 import Icon from "../util-components/Icon";
@@ -13,6 +13,7 @@ import {UserOutlined} from "@ant-design/icons";
 import {setChatNavigationConfig, setCurrentChat} from "../../redux/actions/ChatActions";
 import Utils from "utils";
 import CustomMenuItem from "./CustomComponents/CustomMenuItem";
+import {env} from "../../configs/EnvironmentConfig";
 
 const {SubMenu} = Menu;
 const {useBreakpoint} = Grid;
@@ -39,6 +40,7 @@ const SideNavContent = (props) => {
   const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
   const dispatch = useDispatch()
   const location = useLocation()
+  const history = useHistory()
   const key = Utils.getRouteMongooseId(location.pathname)
 
   const {activeUsers, chats} = useSelector(state => {
@@ -51,29 +53,27 @@ const SideNavContent = (props) => {
   const [routeInfo, setRouteInfo] = useState(null)
 
   useEffect(() => {
+    // if(chats.length<=0){
+    //   history.push(`${APP_PREFIX_PATH}/home`)
+    //   console.log({history})
+    // }
+    let currentChat = chats.find(item => item._id === key)
     let config = chats.map(chat => {
       return {
         key: chat._id,
         path: `${APP_PREFIX_PATH}/messages/${chat._id}`,
         title: chat.name,
-        avatar: chat.avatar,
+        avatar: chat.avatar || env.API_ENDPOINT_URL + '/' + chat.members[1].avatar.url,
         breadcrumb: false,
       }
     })
     setNavigationConfig(config)
     setRouteInfo(Utils.getRouteInfo(config, location.pathname))
+    Utils.checkObject(currentChat) && dispatch(setCurrentChat(currentChat))
   }, [chats])
 
-  useEffect(()=>{
-    // if(key && chats){
-    //   let currentChat = chats.find(item => item._id === key)
-    //   console.log({currentChat})
-    //   dispatch(setCurrentChat(currentChat))
-    // }
-  }, [])
-
   const onClick = ({item, key, keyPath, selectedKeys, domEvent}) => {
-    console.log({item, key, keyPath, selectedKeys, domEvent})
+    // console.log({item, key, keyPath, selectedKeys, domEvent})
     let currentChat = chats.find(item => item._id === key)
     dispatch(setCurrentChat(currentChat))
   }
@@ -95,16 +95,16 @@ const SideNavContent = (props) => {
       onClick={onClick}
     >
       {navigationConfig.map((menu) =>
-        <Menu.Item key={menu.key} style={{
-          height: 'fit-content',
-          paddingLeft: '20%',
-        }}>
-          {menu.avatar ? <Avatar src={menu?.avatar} size={56} style={{marginRight: 8}}/> :
-            <Avatar icon={<UserOutlined/>} size={56} style={{marginRight: 8}}/>
-          }
-          <span>{menu?.title}</span>
-          {menu.path ? <Link onClick={() => closeMobileNav()} to={menu.path}/> : null}
-        </Menu.Item>
+          <Menu.Item key={menu.key} style={{
+            height: 'fit-content',
+            paddingLeft: '20%',
+          }}>
+            {menu.avatar ? <Avatar src={menu?.avatar} size={56} style={{marginRight: 8}}/> :
+              <Avatar icon={<UserOutlined/>} size={56} style={{marginRight: 8}}/>
+            }
+            <span>{menu?.title}</span>
+            {menu.path ? <Link onClick={() => closeMobileNav()} to={menu.path}/> : null}
+          </Menu.Item>
         // <CustomMenuItem
         //   key={menu.key}
         //   avatar={menu.avatar}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import SideNav from 'components/layout-components/SideNav';
 import Loading from 'components/shared-components/Loading';
 import MobileNav from 'components/layout-components/MobileNav'
@@ -22,6 +22,7 @@ import utils from 'utils';
 import {useThemeSwitcher} from "react-css-theme-switcher";
 import CustomHeader from "../../components/layout-components/CustomComponents/CustomHeader";
 import CustomFooter from "../../components/layout-components/CustomComponents/CustomFooter";
+import Utils from "utils";
 
 const {Content, Header, Footer} = Layout;
 const {useBreakpoint} = Grid;
@@ -32,6 +33,9 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
   const isMobile = !screens.includes('lg')
   const isNavSide = navType === NAV_TYPE_SIDE
   const isNavTop = navType === NAV_TYPE_TOP
+  const currentChat = useSelector(state=>{
+    return state.chatReducer.currentChat
+  })
   const getLayoutGutter = () => {
     if (isNavTop || isMobile) {
       return SIDE_NAV_COLLAPSED_WIDTH
@@ -61,7 +65,7 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
       <SideNav routeInfo={currentRouteInfo}/>
       <Layout className="app-container"
               style={{height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column',...getLayoutDirectionGutter(), }}>
-        <CustomHeader/>
+        {Utils.checkObject(currentChat) && <CustomHeader/>}
         <div className="app-layout my-app-layout"
                 style={{overflow: 'hidden', flexGrow: 1, height: '100%'}}>
           {/*<div className={`app-content ${isNavTop ? 'layout-top-nav' : ''}`} style={{marginTop: 0}}>*/}
@@ -72,7 +76,7 @@ export const AppLayout = ({navCollapsed, navType, location, direction}) => {
           <AppViews/>
         </div>
         {/*<Footer style={{backgroundColor: 'lightgreen', height: FOOTER_HEIGHT}}/>*/}
-        <CustomFooter/>
+        {Utils.checkObject(currentChat) && <CustomFooter/>}
       </Layout>
       {isMobile && <MobileNav/>}
     </Layout>

@@ -92,7 +92,8 @@ class Socket {
   }
 
   static onDeleteChat(callback){
-    this.socket.on(CONSTANTS.SOCKET_EVENTS.DELETE_CHAT, (chatId)=>{
+    this.socket.on(CONSTANTS.SOCKET_EVENTS.DELETE_CHAT, (chatId, messages)=>{
+      console.log({chatId, messages})
       callback(deleteChat(chatId))
     })
   }

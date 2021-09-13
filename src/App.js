@@ -19,6 +19,7 @@ const App = () => {
     Socket.onGetChats(dispatchAction)
     Socket.onGetCurrentChatMessages(dispatchAction)
     Socket.onSendMessage(dispatchAction)
+    Socket.onDeleteChat(dispatchAction)
   })
   return (
     <div className="App" style={{height: '100%'}}>

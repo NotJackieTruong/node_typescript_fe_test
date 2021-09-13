@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Avatar, Button, Dropdown, Layout, Menu} from "antd";
 import {useSelector} from "react-redux";
 import {UserOutlined, PhoneFilled, VideoCameraFilled, SearchOutlined, MoreOutlined} from "@ant-design/icons";
-import CustomAlert from "../../../views/app-views/chat/component/CustomAlert";
 import Modal from "antd/es/modal/Modal";
+import Socket from "../../../socket/Socket";
 
 const {Header} = Layout
 
@@ -23,7 +23,7 @@ const CustomHeader = () => {
 
   const handleOk = () => {
     setIsModalVisible(false);
-
+    Socket.emitDeleteChat(currentChat._id)
   };
 
   const handleCancel = () => {

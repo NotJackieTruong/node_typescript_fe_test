@@ -34,7 +34,7 @@ const ChatReducer = (state = initState, action) => {
       return {...state, currentChatMessages: action.payload, currentRepliedMessage: {}}
 
     case ADD_MESSAGE:
-      currentChatMessagesClone.push(action.payload)
+      action.payload.chat === state.currentChat._id && currentChatMessagesClone.push(action.payload)
       return {...state, currentChatMessages: currentChatMessagesClone}
 
     case LOAD_MORE_MESSAGES:
@@ -49,8 +49,8 @@ const ChatReducer = (state = initState, action) => {
       return {...state, currentRepliedMessage: action.payload}
 
     case DELETE_CHAT:
-
-      return {...state, chats: chatsClone.filter(item=> item._id !== action)}
+      chatsClone = chatsClone.filter(item => item._id !== action.payload)
+      return {...state, chats: chatsClone, currentChat: {}, currentChatMessages: [], currentRepliedMessage: {}}
 
     default:
       return {...state}

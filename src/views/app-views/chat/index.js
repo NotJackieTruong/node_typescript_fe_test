@@ -45,11 +45,12 @@ const Chat = () => {
       let endSequence = true
       let showTimestamp = true
       let showReply = false
-      let isSender = currentMessage.sender._id === userInfo._id || currentMessage.sender === userInfo._id
+      let showAvatar = false
+      let isSender = currentMessage.sender._id === userInfo._id
 
       //  check time sequence(ms)
       if (prevMessage) {
-        let isPrevSender = prevMessage.sender._id === userInfo._id || prevMessage.sender === userInfo._id
+        let isPrevSender = prevMessage.sender._id === currentMessage.sender._id
         let timeDiff = new Date(currentMessage.createdAt) - new Date(prevMessage.createdAt)
         if (isPrevSender && timeDiff < 1 * 60 * 60 * 1000) {
           startSequence = false
@@ -61,16 +62,19 @@ const Chat = () => {
       }
 
       if (nextMessage) {
-        let isNextSender = nextMessage.sender._id === userInfo._id || nextMessage.sender === userInfo._id
-
+        let isNextSender = nextMessage.sender._id == currentMessage.sender._id
         let timeDiff = new Date(nextMessage.createdAt) - new Date(currentMessage.createdAt)
         if (isNextSender && timeDiff < 1 * 60 * 60 * 1000) {
           endSequence = false
         }
       }
 
-      if(message.repliesTo){
+      if (message.repliesTo) {
         showReply = true
+      }
+
+      if (!isSender && currentChat.members.length > 2) {
+        showAvatar = true
       }
 
       return (
@@ -82,6 +86,7 @@ const Chat = () => {
           messageInfo={message}
           showTimestamp={showTimestamp}
           showReply={showReply}
+          showAvatar={showAvatar}
           showModal={showModal}
         />
       )
@@ -139,7 +144,7 @@ const Chat = () => {
 
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log({isModalVisible})
   }, [isModalVisible])
 

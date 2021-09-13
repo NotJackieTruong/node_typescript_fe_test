@@ -3,7 +3,7 @@ const dev = {
 };
 
 const prod = {
-  API_ENDPOINT_URL: 'https://api.prod.com'
+  API_ENDPOINT_URL: 'https://realtimechatxyz.herokuapp.com/'
 };
 
 const test = {

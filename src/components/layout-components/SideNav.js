@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Avatar, Button, Grid, Layout, Space, Input, Modal, List, Tag} from 'antd';
-import {connect, useSelector} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {SIDE_NAV_WIDTH, SIDE_NAV_DARK, NAV_TYPE_SIDE} from 'constants/ThemeConstant';
 import {Scrollbars} from 'react-custom-scrollbars';
 import MenuContent from './MenuContent'
@@ -15,6 +15,7 @@ const {useBreakpoint} = Grid;
 const {Search} = Input
 
 export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, localization = true}) => {
+  const dispatch = useDispatch()
   const props = {sideNavTheme, routeInfo, hideGroupTitle, localization}
   const screens = utils.getBreakPoint(useBreakpoint());
   const isMobile = !screens.includes('lg')
@@ -50,7 +51,6 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
   const handleOk = () => {
     setIsModalVisible(false);
     let array = [...userModalList.filter(item => item.isSelected === true), userInfo]
-    console.log({array})
     Socket.emitCreateNewChat(array)
     resetState()
   };
@@ -91,8 +91,9 @@ export const SideNav = ({navCollapsed, sideNavTheme, routeInfo, hideGroupTitle, 
       collapsed={isMobile}
       style={{top: 0, height: '100%'}}
     >
-      <div className={`side-nav-header d-flex align-items-center ${isMobile? 'justify-content-center': 'justify-content-between'}`}
-           style={{padding: '0px 8px', margin: '4px 0 8px 0'}}>
+      <div
+        className={`side-nav-header d-flex align-items-center ${isMobile ? 'justify-content-center' : 'justify-content-between'}`}
+        style={{padding: '0px 8px', margin: '4px 0 8px 0'}}>
         {!isMobile && <>
           <NavProfile/>
           <span className={"font-weight-bold"}>Clone</span>

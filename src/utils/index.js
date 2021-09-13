@@ -99,15 +99,20 @@ class Utils {
     return id
   }
 
-  static convertBufferToUrl(buffer){
+  static convertBufferToUrl(buffer) {
     const blob = new Blob([buffer])
     const url = URL.createObjectURL(blob)
     return url
   }
 
-  static removeDuplicate(array, prop="_id"){
-    return array.filter((v,i,a)=>a.findIndex(t=>(t[prop] === v[prop]))===i)
+  static removeDuplicate(array, prop = "_id") {
+    return array.filter((v, i, a) => a.findIndex(t => (t[prop] === v[prop])) === i)
   }
+
+  static checkObject(object) {
+    return object && Object.keys(object).length > 0
+  }
+
 
   /**
    * Get first character from first & last sentences of a username
